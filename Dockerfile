@@ -13,8 +13,9 @@ WORKDIR /tmp
 ########################################################
 # Customization for user and location
 ########################################################
-
-ENV NG_USER=numgeom
+ENV LANG en_US.UTF-8
+ENV LANGUAGE en_US:en
+ENV LC_ALL en_US.UTF-8
 
 # Set up user so that we do not run as root
 RUN apt-get update && \
@@ -26,6 +27,8 @@ RUN apt-get update && \
           bash-completion && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
+
+ENV NG_USER=numgeom
 
 RUN usermod -l $NG_USER -d /home/$NG_USER -m $DOCKER_USER && \
     groupmod -n $NG_USER $DOCKER_USER && \
