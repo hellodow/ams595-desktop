@@ -10,13 +10,6 @@ LABEL maintainer "Xiangmin Jiao <xmjiao@gmail.com>"
 USER root
 WORKDIR /tmp
 
-########################################################
-# Customization for user and location
-########################################################
-ENV LANG en_US.UTF-8
-ENV LANGUAGE en_US:en
-ENV LC_ALL en_US.UTF-8
-
 # Set up user so that we do not run as root
 RUN apt-get update && \
     apt-get install -y --no-install-recommends \
@@ -28,6 +21,9 @@ RUN apt-get update && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
+########################################################
+# Customization for user
+########################################################
 ENV NG_USER=numgeom
 
 RUN usermod -l $NG_USER -d /home/$NG_USER -m $DOCKER_USER && \
