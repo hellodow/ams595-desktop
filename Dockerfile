@@ -21,6 +21,7 @@ RUN apt-get update && \
         build-essential \
         cmake \
         bison \
+        flex \
         git \
         bash-completion \
         bsdtar \
