@@ -1,5 +1,5 @@
 # Builds a Docker image for development environment
-# with Ubuntu, LXDE, and user numgeom.
+# with Ubuntu, LXDE, PETSc, and user numgeom.
 #
 # Authors:
 # Xiangmin Jiao <xmjiao@gmail.com>
@@ -10,24 +10,76 @@ LABEL maintainer "Xiangmin Jiao <xmjiao@gmail.com>"
 USER root
 WORKDIR /tmp
 
-# Set up user so that we do not run as root
+# Environment variables
+ENV PETSC_VERSION=3.7.5 \
+    OPENBLAS_NUM_THREADS=1 \
+    OPENBLAS_VERBOSE=0
+
+# Install system packages
 RUN apt-get update && \
     apt-get install -y --no-install-recommends \
-          build-essential \
-          git \
-          bash-completion \
-          bsdtar \
-          gdb \
-          ddd \
-          meld \
-          emacs24 && \
+        build-essential \
+        cmake \
+        git \
+        bash-completion \
+        bsdtar \
+        gdb \
+        ddd \
+        gfortran \
+        pkg-config \
+        ccache \
+        \
+        libboost-filesystem-dev \
+        libboost-iostreams-dev \
+        libboost-program-options-dev \
+        libboost-system-dev \
+        libboost-thread-dev \
+        libboost-timer-dev \
+        liblapack-dev \
+        libmpich-dev \
+        libopenblas-dev \
+        mpich \
+        \
+        meld \
+        emacs24 && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
+
+# Install PETSc from source.
+RUN curl -s http://ftp.mcs.anl.gov/pub/petsc/release-snapshots/petsc-lite-${PETSC_VERSION}.tar.gz | \
+    tar zx && \
+    cd petsc-${PETSC_VERSION} && \
+    ./configure --COPTFLAGS="-O2" \
+                --CXXOPTFLAGS="-O2" \
+                --FOPTFLAGS="-O2" \
+                --with-blas-lib=/usr/lib/libopenblas.a --with-lapack-lib=/usr/lib/liblapack.a \
+                --with-c-support \
+                --with-debugging=0 \
+                --with-shared-libraries \
+                --download-suitesparse \
+                --download-superlu \
+                --download-superlu_dist \
+                --download-scalapack \
+                --download-metis \
+                --download-parmetis \
+                --download-ptscotch \
+                --download-hypre \
+                --download-mumps \
+                --download-blacs \
+                --download-spai \
+                --download-ml \
+                --prefix=/usr/local/petsc-32 && \
+     make && \
+     make install && \
+     rm -rf /tmp/*
+
+ENV PETSC_DIR=/usr/local/petsc-32
 
 ########################################################
 # Customization for user
 ########################################################
 ENV NG_USER=numgeom
+ADD image $DOCKER_HOME
 
 RUN usermod -l $NG_USER -d /home/$NG_USER -m $DOCKER_USER && \
     groupmod -n $NG_USER $DOCKER_USER && \
