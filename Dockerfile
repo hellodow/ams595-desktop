@@ -33,7 +33,7 @@ RUN add-apt-repository ppa:webupd8team/atom && \
         gfortran \
         pkg-config \
         ccache \
-        openjdk-8-jre-headless\
+        openjdk-8-jre-headless \
         \
         libboost-filesystem-dev \
         libboost-iostreams-dev \
@@ -85,7 +85,7 @@ ENV PETSC_DIR=/usr/local/petsc-32
 RUN curl -O http://www.syntevo.com/static/smart/download/smartgit/smartgit-${SMARTGIT_VER}.deb && \
     dpkg -i smartgit-${SMARTGIT_VER}.deb && \
     apm install language-matlab linter-matlab && \
-    rm -rf /tmp/* /var/tmp/* && \
+    rm -rf /tmp/* /var/tmp/*
 
 ########################################################
 # Customization for user
