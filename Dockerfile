@@ -84,7 +84,7 @@ ENV PETSC_DIR=/usr/local/petsc-32
 # Install smartgit and customize atom
 RUN curl -O http://www.syntevo.com/static/smart/download/smartgit/smartgit-${SMARTGIT_VER}.deb && \
     dpkg -i smartgit-${SMARTGIT_VER}.deb && \
-    apm install language-matlab linter-matlab
+    apm install language-matlab linter-matlab && \
     rm -rf /tmp/* /var/tmp/* && \
 
 ########################################################
