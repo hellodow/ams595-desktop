@@ -1,5 +1,5 @@
 # Builds a Docker image for development environment
-# with Ubuntu, LXDE, PETSc, and user numgeom.
+# with Ubuntu, LXDE, PETSc, Atom and SmartGit.
 #
 # Authors:
 # Xiangmin Jiao <xmjiao@gmail.com>
@@ -16,7 +16,8 @@ ENV PETSC_VERSION=3.7.5 \
     OPENBLAS_VERBOSE=0
 
 # Install system packages
-RUN apt-get update && \
+RUN add-apt-repository ppa:webupd8team/atom && \
+    apt-get update && \
     apt-get install -y --no-install-recommends \
         build-essential \
         cmake \
@@ -30,6 +31,7 @@ RUN apt-get update && \
         gfortran \
         pkg-config \
         ccache \
+        openjdk-8-jre-headless\
         \
         libboost-filesystem-dev \
         libboost-iostreams-dev \
@@ -43,9 +45,9 @@ RUN apt-get update && \
         mpich \
         \
         meld \
-        emacs24 && \
+        atom && \
     apt-get clean && \
-    rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
+    rm -rf /var/lib/apt/lists/*
 
 # Install PETSc from source.
 RUN curl -s http://ftp.mcs.anl.gov/pub/petsc/release-snapshots/petsc-lite-${PETSC_VERSION}.tar.gz | \
@@ -73,9 +75,15 @@ RUN curl -s http://ftp.mcs.anl.gov/pub/petsc/release-snapshots/petsc-lite-${PETS
                 --prefix=/usr/local/petsc-32 && \
      make && \
      make install && \
-     rm -rf /tmp/*
+     rm -rf  /tmp/* /var/tmp/*
 
 ENV PETSC_DIR=/usr/local/petsc-32
+
+# Install smartgit and customize atom
+RUN curl -O http://www.syntevo.com/static/smart/download/smartgit/smartgit-${SMARTGIT_VER}.deb && \
+    dpkg -i smartgit-${SMARTGIT_VER}.deb && \
+    apm install language-matlab linter-matlab
+    rm -rf /tmp/* /var/tmp/* && \
 
 ########################################################
 # Customization for user
