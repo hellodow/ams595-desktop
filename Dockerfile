@@ -84,7 +84,6 @@ ENV PETSC_DIR=/usr/local/petsc-32
 # Customization for user
 ########################################################
 ENV NG_USER=numgeom
-ADD image $DOCKER_HOME
 
 RUN usermod -l $NG_USER -d /home/$NG_USER -m $DOCKER_USER && \
     groupmod -n $NG_USER $DOCKER_USER && \
