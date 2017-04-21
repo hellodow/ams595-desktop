@@ -20,6 +20,7 @@ RUN add-apt-repository ppa:webupd8team/atom && \
     apt-get update && \
     apt-get install -y --no-install-recommends \
         build-essential \
+        gfortran \
         cmake \
         bison \
         flex \
