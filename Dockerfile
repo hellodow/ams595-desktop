@@ -13,7 +13,9 @@ WORKDIR /tmp
 # Environment variables
 ENV PETSC_VERSION=3.7.5 \
     OPENBLAS_NUM_THREADS=1 \
-    OPENBLAS_VERBOSE=0
+    OPENBLAS_VERBOSE=0 \
+    SMARTGIT_VER=17_0_3
+
 
 # Install system packages
 RUN add-apt-repository ppa:webupd8team/atom && \
