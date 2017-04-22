@@ -46,7 +46,7 @@ RUN add-apt-repository ppa:webupd8team/atom && \
         \
         meld \
         atom && \
-    apm install language-matlab linter-matlab git-plus && \
+    apm install language-matlab linter-matlab git-plus merge-conflict && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
 
