@@ -27,6 +27,8 @@ RUN add-apt-repository ppa:webupd8team/atom && \
         git \
         bash-completion \
         bsdtar \
+        rsync \
+        wget \
         gdb \
         ddd \
         gfortran \
