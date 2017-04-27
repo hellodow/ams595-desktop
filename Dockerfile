@@ -93,6 +93,7 @@ RUN usermod -l $NG_USER -d /home/$NG_USER -m $DOCKER_USER && \
     echo "$NG_USER:docker" | chpasswd && \
     echo "$NG_USER ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers && \
     sed -i "s/$DOCKER_USER/$NG_USER/" /home/$NG_USER/.config/pcmanfm/LXDE/desktop-items-0.conf && \
+    echo "export OMP_NUM_THREADS=\$(nprocs)" >> /home/$NG_USER/.profile && \
     chown -R $NG_USER:$NG_USER /home/$NG_USER
 
 ENV DOCKER_USER=$NG_USER \
