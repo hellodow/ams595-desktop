@@ -31,6 +31,7 @@ RUN add-apt-repository ppa:webupd8team/atom && \
         wget \
         gdb \
         ddd \
+        valgrind \
         gfortran \
         pkg-config \
         ccache \
