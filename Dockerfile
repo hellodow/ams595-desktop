@@ -77,7 +77,7 @@ RUN curl -s http://ftp.mcs.anl.gov/pub/petsc/release-snapshots/petsc-lite-${PETS
                 --download-spai \
                 --download-ml \
                 --prefix=/usr/local/petsc-32 && \
-     make -j 2 && \
+     make MAKE_NP=2 && \
      make install && \
      rm -rf /tmp/* /var/tmp/*
 
