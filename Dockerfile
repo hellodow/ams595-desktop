@@ -87,19 +87,17 @@ ENV PETSC_DIR=/usr/local/petsc-32
 # Customization for user
 ########################################################
 ENV NG_USER=numgeom
-
-RUN usermod -l $NG_USER -d /home/$NG_USER -m $DOCKER_USER && \
-    groupmod -n $NG_USER $DOCKER_USER && \
-    echo "$NG_USER:docker" | chpasswd && \
-    echo "$NG_USER ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers && \
-    sed -i "s/$DOCKER_USER/$NG_USER/" /home/$NG_USER/.config/pcmanfm/LXDE/desktop-items-0.conf && \
-    echo "export OMP_NUM_THREADS=\$(nproc)" >> /home/$NG_USER/.profile && \
-    chown -R $NG_USER:$NG_USER /home/$NG_USER
-
 ENV DOCKER_USER=$NG_USER \
     DOCKER_GROUP=$NG_USER \
     DOCKER_HOME=/home/$NG_USER \
     HOME=/home/$NG_USER
+
+RUN usermod -l $DOCKER_USER -d $DOCKER_HOME -m x11vnc && \
+    groupmod -n $DOCKER_USER x11vnc && \
+    echo "$DOCKER_USER:docker" | chpasswd && \
+    echo "$DOCKER_USER ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers && \
+    echo "export OMP_NUM_THREADS=\$(nproc)" >> $DOCKER_HOME/.profile && \
+    chown -R $DOCKER_USER:$DOCKER_GROUP $DOCKER_HOME
 
 WORKDIR $DOCKER_HOME
 
