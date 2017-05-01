@@ -76,12 +76,12 @@ RUN curl -s http://ftp.mcs.anl.gov/pub/petsc/release-snapshots/petsc-lite-${PETS
                 --download-blacs \
                 --download-spai \
                 --download-ml \
-                --prefix=/usr/local/petsc-32 && \
+                --prefix=/usr/local/petsc-$PETSC_VERSION && \
      make && \
      make install && \
      rm -rf /tmp/* /var/tmp/*
 
-ENV PETSC_DIR=/usr/local/petsc-32
+ENV PETSC_DIR=/usr/local/petsc-$PETSC_VERSION
 
 ########################################################
 # Customization for user
