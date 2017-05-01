@@ -11,7 +11,7 @@ USER root
 WORKDIR /tmp
 
 # Environment variables
-ENV PETSC_VERSION=3.7.5 \
+ENV PETSC_VERSION=3.7.6 \
     OPENBLAS_NUM_THREADS=1 \
     OPENBLAS_VERBOSE=0
 
