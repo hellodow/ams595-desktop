@@ -4,6 +4,5 @@ services: docker
 
 script:
   - docker login -u "$DOCKER_USERNAME" -p "$DOCKER_USERPASS"
-  - docker build --tag numgeom/desktop-base:16.04 --tag numgeom/desktop-base:latest . && docker push numgeom/desktop-base
-  - git clone -b cuda https://github.com/numgeom/desktop-base.git cuda && docker build --tag numgeom/desktop-base:cuda cuda && docker push numgeom/desktop-base:cuda
+  - docker build --tag ams595/desktop:16.04 --tag ams595/desktop:latest . && docker push ams595/desktop
   - docker images

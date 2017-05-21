@@ -1,5 +1,5 @@
-# Builds a Docker image for development environment
-# with Ubuntu, LXDE, PETSc, and Atom.
+# Builds a Docker image for "AMS 595: Fundamental of Computing"
+# at Stony Brook University with Ubuntu, LXDE, and Atom.
 #
 # Authors:
 # Xiangmin Jiao <xmjiao@gmail.com>
@@ -9,11 +9,6 @@ LABEL maintainer "Xiangmin Jiao <xmjiao@gmail.com>"
 
 USER root
 WORKDIR /tmp
-
-# Environment variables
-ENV PETSC_VERSION=3.7.6 \
-    OPENBLAS_NUM_THREADS=1 \
-    OPENBLAS_VERBOSE=0
 
 # Install system packages
 RUN add-apt-repository ppa:webupd8team/atom && \
@@ -36,12 +31,6 @@ RUN add-apt-repository ppa:webupd8team/atom && \
         pkg-config \
         ccache \
         \
-        libboost-filesystem-dev \
-        libboost-iostreams-dev \
-        libboost-program-options-dev \
-        libboost-system-dev \
-        libboost-thread-dev \
-        libboost-timer-dev \
         liblapack-dev \
         libmpich-dev \
         libopenblas-dev \
@@ -53,44 +42,14 @@ RUN add-apt-repository ppa:webupd8team/atom && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
 
-# Install PETSc from source.
-RUN curl -s http://ftp.mcs.anl.gov/pub/petsc/release-snapshots/petsc-lite-${PETSC_VERSION}.tar.gz | \
-    tar zx && \
-    cd petsc-${PETSC_VERSION} && \
-    ./configure --COPTFLAGS="-O2" \
-                --CXXOPTFLAGS="-O2" \
-                --FOPTFLAGS="-O2" \
-                --with-blas-lib=/usr/lib/libopenblas.a --with-lapack-lib=/usr/lib/liblapack.a \
-                --with-c-support \
-                --with-debugging=0 \
-                --with-shared-libraries \
-                --download-suitesparse \
-                --download-superlu \
-                --download-superlu_dist \
-                --download-scalapack \
-                --download-metis \
-                --download-parmetis \
-                --download-ptscotch \
-                --download-hypre \
-                --download-mumps \
-                --download-blacs \
-                --download-spai \
-                --download-ml \
-                --prefix=/usr/local/petsc-$PETSC_VERSION && \
-     make && \
-     make install && \
-     rm -rf /tmp/* /var/tmp/*
-
-ENV PETSC_DIR=/usr/local/petsc-$PETSC_VERSION
-
 ########################################################
 # Customization for user
 ########################################################
-ENV NG_USER=numgeom
-ENV DOCKER_USER=$NG_USER \
-    DOCKER_GROUP=$NG_USER \
-    DOCKER_HOME=/home/$NG_USER \
-    HOME=/home/$NG_USER
+ENV CDS_USER=ams595
+ENV DOCKER_USER=$CDS_USER \
+    DOCKER_GROUP=$CDS_USER \
+    DOCKER_HOME=/home/$CDS_USER \
+    HOME=/home/$CDS_USER
 
 RUN usermod -l $DOCKER_USER -d $DOCKER_HOME -m x11vnc && \
     groupmod -n $DOCKER_USER x11vnc && \
