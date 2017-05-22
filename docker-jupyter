@@ -89,25 +89,6 @@ def find_free_port(port, retries):
     sys.exit(-1)
 
 
-def wait_net_service(port, timeout=30):
-    """ Wait for network service to appear.
-    """
-    import socket
-
-    for i in range(timeout * 10):
-        try:
-            sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-            sock.connect(("127.0.0.1", port))
-        except socket.error as err:
-            sock.close()
-            time.sleep(0.1)
-            continue
-        else:
-            sock.close()
-            time.sleep(1)
-            return True
-
-
 if __name__ == "__main__":
     import os
     import subprocess
@@ -160,13 +141,12 @@ if __name__ == "__main__":
                      "-p", "127.0.0.1:" + port + ":" + port,
                      "--env", "HOST_UID=" + uid] +
                      volumes +
-                    ["-w", "/home/" + user + "/shared",
+                    ["-w", docker_home + "/shared",
                      image,
                     "jupyter-notebook --no-browser --ip=0.0.0.0 --port " + port +
-                     ">> " + docker_home + "/.log/jupyter.log 2>&1"])
+                     " >> " + docker_home + "/.log/jupyter.log 2>&1"])
 
     wait_for_url = True
-
     # Wait for user to press Ctrl-C
     while True:
         try:
@@ -195,15 +175,11 @@ if __name__ == "__main__":
 
                         print("Copy/paste this URL into your browser when you connect for the first time:")
                         print("    ", url)
-
-                        wait_net_service(int(port))
-                        webbrowser.open(url[ind:])
+                        webbrowser.open(url)
                         p.stdout.close()
                         p.terminate()
                         wait_for_url = False
                         break
-                    else:
-                        sys.stdout.write(stdout_line)
 
             print("Press Ctrl-C to stop the server.")
             while True:
@@ -221,7 +197,7 @@ if __name__ == "__main__":
                 if yes == "Y" or yes == "y":
                     print('*** Stopping the server.')
                     p = subprocess.Popen(["docker", "exec", container,
-                                          "killall", "startvnc.sh"],
+                                          "killall", "jupyter-notebook"],
                                          stdout=subprocess.PIPE, stderr=subprocess.PIPE)
                     out, err = p.communicate()
                     sys.exit(0)
