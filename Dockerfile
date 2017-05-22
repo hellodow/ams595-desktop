@@ -107,6 +107,8 @@ RUN usermod -l $DOCKER_USER -d $DOCKER_HOME -m x11vnc && \
     echo "$DOCKER_USER:docker" | chpasswd && \
     echo "$DOCKER_USER ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers && \
     echo "export OMP_NUM_THREADS=\$(nproc)" >> $DOCKER_HOME/.profile && \
+    touch $DOCKER_HOME/.log/jupyter.log && \
+    touch $DOCKER_HOME/.log/vnc.log && \
     chown -R $DOCKER_USER:$DOCKER_GROUP $DOCKER_HOME
 
 WORKDIR $DOCKER_HOME
