@@ -216,19 +216,17 @@ if __name__ == "__main__":
             continue
         except KeyboardInterrupt:
             try:
-                print("Type Y or Ctrl-C again to stop the server: ")
-                yes = sys.stdin.read(1)
+                print("Press Ctrl-C again to stop the server: ")
+                yes = ""
+                time.sleep(5)
             except KeyboardInterrupt:
-                yes = "Y"
-            finally:
-                if yes == "Y" or yes == "y":
-                    print('*** Stopping the server.')
-                    p = subprocess.Popen(["docker", "exec", container,
-                                          "killall", "startvnc.sh"],
-                                         stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-                    out, err = p.communicate()
-                    sys.exit(0)
-                else:
-                    print('Invalid response. Resuming...')
+                print('*** Stopping the server.')
+                p = subprocess.Popen(["docker", "exec", container,
+                                      "killall", "jupyter-notebook"],
+                                     stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+                out, err = p.communicate()
+                sys.exit(0)
+
+            print('Invalid response. Resuming...')
         except OSError:
             system.exit(-1)
