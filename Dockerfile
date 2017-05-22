@@ -38,7 +38,7 @@ RUN add-apt-repository ppa:webupd8team/atom && \
         mpich \
         \
         meld \
-        atom &&
+        atom && \
     apt-get install -y --no-install-recommends \
         octave \
         gnuplot-x11 \
