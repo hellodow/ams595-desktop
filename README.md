@@ -1,11 +1,11 @@
 # Docker Image for AMS 595
 This Docker image provides a Ubuntu 16.04 environment for the class
-AMS 595: Fundamental of Computing at Stony Brook University for Fall 2017.
-The course covers Octave, Python, and C/C++. This environment provides
+"AMS 595: Fundamental of Computing" at Stony Brook University.
+The course covers Octave, Python, and C++. This environment provides
 preinstalled Octave 4.0.2, Python 3.5.2 (with NumPy, SciPy, Pandas and Spyder),
 gcc 5.4.0, Jupyter Notebook with Octave and Python kernels, Atom, and ddd.
 The image runs the LXDE Windows Manager in Ubuntu, which will show in a
-webbrowser, so that you can use the same environment regardless whether
+web browser, so that you can use the same environment regardless whether
 you use Linux, Mac or Windows.
 
 [![Build Status](https://travis-ci.org/compdatasci/ams595-desktop.svg?branch=master)](https://travis-ci.org/compdatasci/ams595-desktop) [![](https://images.microbadger.com/badges/image/ams595/desktop.svg)](https://microbadger.com/images/ams595/desktop)
@@ -13,10 +13,11 @@ you use Linux, Mac or Windows.
 ## Preparation
 
 You can use this Docker image on 64-bit Linux, Mac or Windows. Before you start,
-make sure you have Python and Docker already installed on your system.
+please install Python and Docker on your computer.
 
 ### Installing Python
-If you use Linux or Mac, chances are Python is already installed on your system.
+If you use Linux or Mac, chances are Python is already installed on your system,
+so you can skip this step.
 
 If you use Windows, you need to install Python if you have not yet done so.
 You can download the Windows installer at
@@ -25,7 +26,7 @@ You can choose either Python 3.x or Python 2.x. Note that you need to
 add Python into the PATH. See
 http://python-guide-pt-br.readthedocs.io/en/latest/starting/install/win/
 for more detail. Alternatively, you can also install Anaconda, which contains
-NumPy, SciPy etc. and will set the path for you automatically.
+NumPy, SciPy, Spyder etc. and will set the path for you automatically.
 You can download Anaconda at https://www.continuum.io/downloads#windows.
 
 ### Installing Docker
@@ -48,12 +49,12 @@ source codes and data, and then run the command:
 ```
 curl -L -s https://github.com/compdatasci/ams595-desktop/raw/master/docker-desktop | python - -p
 ```
-This will run the Docker image and then launch your default webbrowser and show
+This will run the Docker image and then launch your default web browser and show
 the desktop environment. The `-p` option above is optional, and it instructs
 the Python script to pull the latest image each time.
 
-You can also use the Docker image as a Jupyter-Notebook server for your
-native web browser. Replace the above command with
+You can also use the Docker image as a Jupyter-Notebook server for the
+default web browser on your computer. Replace the above command with
 ```
 curl -L -s https://github.com/compdatasci/ams595-desktop/raw/master/docker-jupyter | python - -p
 ```
