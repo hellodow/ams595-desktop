@@ -1,8 +1,0 @@
-language: python
-
-services: docker
-
-script:
-  - docker login -u "$DOCKER_USERNAME" -p "$DOCKER_USERPASS"
-  - docker build --tag ams595/desktop:16.04 --tag ams595/desktop:latest . && docker push ams595/desktop
-  - docker images
