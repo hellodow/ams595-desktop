@@ -19,8 +19,11 @@ If you use Linux or Mac, chances are Python is already installed on your system.
 If you use Windows, you need to install Python if you have not yet done so.
 You can download the Windows installer at
 https://www.python.org/downloads/windows/.
-You can choose either Python 3.x or Python 2.x.
-Alternatively, you can also install Anaconda, which contains NumPy, SciPy etc.
+You can choose either Python 3.x or Python 2.x. Note that you need to
+add Python into the PATH. See
+http://python-guide-pt-br.readthedocs.io/en/latest/starting/install/win/
+for more detail. Alternatively, you can also install Anaconda, which contains
+NumPy, SciPy etc. and will set the path for you automatically.
 You can download Anaconda at https://www.continuum.io/downloads#windows.
 
 ### Installing Docker
