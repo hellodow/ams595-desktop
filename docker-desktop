@@ -161,7 +161,7 @@ if __name__ == "__main__":
                                                "echo $DOCKER_HOME"]).decode('utf-8')[:-1]
 
     volumes = ["-v", pwd + ":" + docker_home + "/shared",
-               "-v", "x11vnc_config:" + docker_home + "/.config",
+               "-v", "ams595_config:" + docker_home + "/.config",
                "-v", homedir + "/.ssh" + ":" + docker_home + "/.ssh"]
 
     print("Starting up docker image...")
@@ -222,7 +222,7 @@ if __name__ == "__main__":
             except KeyboardInterrupt:
                 print('*** Stopping the server.')
                 p = subprocess.Popen(["docker", "exec", container,
-                                      "killall", "jupyter-notebook"],
+                                      "killall", "startvnc.sh"],
                                      stdout=subprocess.PIPE, stderr=subprocess.PIPE)
                 out, err = p.communicate()
                 sys.exit(0)

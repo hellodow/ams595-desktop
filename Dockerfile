@@ -67,7 +67,16 @@ RUN pip3 install -U pip \
          sympy \
          scipy \
          pandas \
-         nose && \
+         nose \
+         sphinx \
+         autopep8 \
+         flufl.lock \
+         ply \
+         pytest \
+         six \
+         PyQt5 \
+         spyder \
+         urllib3 && \
     pip3 install -U \
          jupyter \
          ipywidgets && \
