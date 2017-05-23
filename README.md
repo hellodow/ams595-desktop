@@ -16,9 +16,12 @@ make sure you have Python and Docker already installed on your system.
 ### Installing Python
 If you use Linux or Mac, chances are Python is already installed on your system.
 
-If you use Windows, the easiest way to install Python is to use Anaconda,
-which you can download at https://www.continuum.io/downloads#windows. You can
-choose Anaconda for either Python 3.x or Python 2.x.
+If you use Windows, you need to install Python if you have not yet done so.
+You can download the Windows installer at
+https://www.python.org/downloads/windows/.
+You can choose either Python 3.x or Python 2.x.
+Alternatively, you can also install Anaconda, which contains NumPy, SciPy etc.
+You can download Anaconda at https://www.continuum.io/downloads#windows.
 
 ### Installing Docker
 
