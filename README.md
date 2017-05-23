@@ -8,7 +8,7 @@ The image runs the LXDE Windows Manager in Ubuntu, which will show in a
 web browser, so that you can use the same environment regardless whether
 you use Linux, Mac or Windows.
 
-[![Build Status](https://travis-ci.org/compdatasci/ams595-desktop.svg?branch=master)](https://travis-ci.org/compdatasci/ams595-desktop) [![](https://images.microbadger.com/badges/image/ams595/desktop.svg)](https://microbadger.com/images/ams595/desktop)
+[![Build Status](https://travis-ci.org/compdatasci/docker-desktop.svg?branch=ams595)](https://travis-ci.org/compdatasci/docker-desktop) [![](https://images.microbadger.com/badges/image/ams595/desktop.svg)](https://microbadger.com/images/ams595/desktop)
 
 ## Preparation
 
@@ -47,7 +47,7 @@ To run the desktop, start a terminal (or a PowerShell Prompt on Windows).
 Change to the directory to a working directory where you will store the
 source codes and data, and then run the command:
 ```
-curl -L -s https://github.com/compdatasci/ams595-desktop/raw/master/docker-desktop | python - -p
+curl -L -s https://github.com/compdatasci/docker-desktop/raw/ams595/docker-desktop | python - -p
 ```
 This will run the Docker image and then launch your default web browser and show
 the desktop environment. The `-p` option above is optional, and it instructs
@@ -56,6 +56,6 @@ the Python script to pull the latest image each time.
 You can also use the Docker image as a Jupyter-Notebook server for the
 default web browser on your computer. Replace the above command with
 ```
-curl -L -s https://github.com/compdatasci/ams595-desktop/raw/master/docker-jupyter | python - -p
+curl -L -s https://github.com/compdatasci/docker-desktop/raw/ams595/docker-jupyter | python - -p
 ```
 in the directory where the Jupyter notebooks are stored.
