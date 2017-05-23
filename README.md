@@ -8,6 +8,8 @@ The image runs the LXDE Windows Manager in Ubuntu, which will show in a
 webbrowser, so that you can use the same environment regardless whether
 you use Linux, Mac or Windows.
 
+[![Build Status](https://travis-ci.org/compdatasci/ams595-desktop.svg?branch=master)](https://travis-ci.org/compdatasci/ams595-desktop) [![](https://images.microbadger.com/badges/image/ams595/desktop.svg)](https://microbadger.com/images/ams595/desktop)
+
 ## Preparation
 
 You can use this Docker image on 64-bit Linux, Mac or Windows. Before you start,
