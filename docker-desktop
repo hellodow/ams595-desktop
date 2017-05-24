@@ -209,9 +209,15 @@ if __name__ == "__main__":
                         sys.stdout.write(stdout_line)
 
             print("Press Ctrl-C to stop the server.")
-            while True:
-                time.sleep(3600)
+
+            # Wait till the container exits or Ctlr-C is pressed
+            subprocess.check_output(["docker", "exec", container,
+                                     "tail", "-f", "/dev/null"])
         except subprocess.CalledProcessError:
+            # If Docker process no long exists, exit
+            if not subprocess.check_output(['docker', 'ps', '-q', '-f' 'name=' + container]):
+                print('Docker container is no longer running')
+                sys.exit(-1)
             time.sleep(1)
             continue
         except KeyboardInterrupt:
@@ -229,4 +235,4 @@ if __name__ == "__main__":
 
             print('Invalid response. Resuming...')
         except OSError:
-            system.exit(-1)
+            sys.exit(-1)
