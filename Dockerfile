@@ -53,14 +53,21 @@ RUN add-apt-repository ppa:webupd8team/atom && \
         ttf-dejavu && \
     apm install \
         language-matlab \
+        language-fortran \
+        intentions \
+        busy-signal \
+        linter-ui-default \
+        linter \
         linter-matlab \
+        linter-python \
+        linter-gfortran \
+        autocompletion-python \
         git-plus \
         merge-conflicts \
         split-diff \
         dbg \
         output-panel \
         dbg-gdb \
-        language-fortran \
         python-autopep8 && \
     pip install -U sympy && \
     octave --eval 'pkg install -forge struct parallel symbolic odepkg' && \
