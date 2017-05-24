@@ -28,7 +28,6 @@ RUN add-apt-repository ppa:webupd8team/atom && \
         gdb \
         ddd \
         electric-fence \
-        gfortran \
         pkg-config \
         ccache \
         \
@@ -52,7 +51,17 @@ RUN add-apt-repository ppa:webupd8team/atom && \
         python3-dev \
         pandoc \
         ttf-dejavu && \
-    apm install language-matlab linter-matlab git-plus merge-conflicts split-diff python-autopep8 && \
+    apm install \
+        language-matlab \
+        linter-matlab \
+        git-plus \
+        merge-conflicts \
+        split-diff \
+        dbg \
+        output-panel \
+        dbg-gdb \
+        language-fortran \
+        python-autopep8 && \
     pip install -U sympy && \
     octave --eval 'pkg install -forge struct parallel symbolic odepkg' && \
     apt-get clean && \
