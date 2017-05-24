@@ -61,7 +61,6 @@ RUN add-apt-repository ppa:webupd8team/atom && \
         linter-ui-default \
         linter \
         linter-matlab \
-        linter-python \
         linter-gfortran \
         autocomplete-python \
         autocomplete-fortran \
