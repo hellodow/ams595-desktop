@@ -52,6 +52,7 @@ RUN add-apt-repository ppa:webupd8team/atom && \
         pandoc \
         ttf-dejavu && \
     apm install \
+        language-cpp14 \
         language-matlab \
         language-fortran \
         intentions \
