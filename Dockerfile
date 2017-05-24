@@ -37,9 +37,7 @@ RUN add-apt-repository ppa:webupd8team/atom && \
         mpich \
         \
         meld \
-        atom \
-        clang-format \
-        uncrustify && \
+        atom && \
     apt-get install -y --no-install-recommends \
         octave \
         gnuplot-x11 \
@@ -71,7 +69,6 @@ RUN add-apt-repository ppa:webupd8team/atom && \
         dbg \
         output-panel \
         dbg-gdb \
-        atom-beutify \
         python-autopep8 && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
@@ -89,6 +86,7 @@ RUN pip3 install -U pip \
          sphinx \
          autopep8 \
          pylama \
+         pylama-pylint \
          flufl.lock \
          ply \
          pytest \
