@@ -37,7 +37,8 @@ RUN add-apt-repository ppa:webupd8team/atom && \
         mpich \
         \
         meld \
-        atom && \
+        atom \
+        clang-format && \
     apt-get install -y --no-install-recommends \
         octave \
         gnuplot-x11 \
@@ -70,7 +71,9 @@ RUN add-apt-repository ppa:webupd8team/atom && \
         dbg \
         output-panel \
         dbg-gdb \
-        python-autopep8 && \
+        python-autopep8 \
+        formatter \
+        formatter-clangformat && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
 
