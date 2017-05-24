@@ -4,7 +4,7 @@ This Docker image provides the Ubuntu 16.04 environment with X Windows for the c
 The course covers programming using MATLAB/Octave, Python, and C++. This image runs the lightweight LXDE Windows Manager, and has Octave 4.0.2, Python 3.5.2 (with NumPy, SciPy, Pandas and Spyder),
 gcc 5.4.0, Jupyter Notebook with Octave and Python kernels, Atom, and ddd preinstalled. The X Windows will display in your web browser in full-screen mode. You can use this Docker image on 64-bit Linux, Mac or Windows. It allows you to use the same programming environment regardless which OS you are running on your laptop or desktop.
 
-<img src="https://raw.github.com/compdatasci/docker-desktop/ams595/screenshots/screenshot.png" width=800/>
+<img src="https://raw.github.com/compdatasci/docker-desktop/ams595/screenshots/screenshot1.png" width=1024/>
 
 [![Build Status](https://travis-ci.org/compdatasci/docker-desktop.svg?branch=ams595)](https://travis-ci.org/compdatasci/docker-desktop) [![](https://images.microbadger.com/badges/image/ams595/desktop.svg)](https://microbadger.com/images/ams595/desktop)
 
