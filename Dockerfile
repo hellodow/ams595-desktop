@@ -27,8 +27,8 @@ RUN add-apt-repository ppa:webupd8team/atom && \
         wget \
         gdb \
         ddd \
+        valgrind \
         electric-fence \
-        pkg-config \
         ccache \
         \
         liblapack-dev \
