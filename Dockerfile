@@ -37,7 +37,9 @@ RUN add-apt-repository ppa:webupd8team/atom && \
         mpich \
         \
         meld \
-        atom && \
+        atom \
+        clang-format \
+        uncrustify && \
     apt-get install -y --no-install-recommends \
         octave \
         gnuplot-x11 \
@@ -61,16 +63,16 @@ RUN add-apt-repository ppa:webupd8team/atom && \
         linter-matlab \
         linter-python \
         linter-gfortran \
-        autocompletion-python \
+        autocomplete-python \
+        autocomplete-fortran \
         git-plus \
         merge-conflicts \
         split-diff \
         dbg \
         output-panel \
         dbg-gdb \
+        atom-beutify \
         python-autopep8 && \
-    pip install -U sympy && \
-    octave --eval 'pkg install -forge struct parallel symbolic odepkg' && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
 
@@ -86,6 +88,7 @@ RUN pip3 install -U pip \
          nose \
          sphinx \
          autopep8 \
+         pylama \
          flufl.lock \
          ply \
          pytest \
