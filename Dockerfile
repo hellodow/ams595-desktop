@@ -70,13 +70,16 @@ RUN add-apt-repository ppa:webupd8team/atom && \
         linter-gcc \
         linter-gfortran \
         linter-pylint \
+        linter-matlab \
         dbg \
         output-panel \
         dbg-gdb \
         python-autopep8 \
         clang-format && \
     apt-get clean && \
-    rm -rf /var/lib/apt/lists/*
+    rm -rf /var/lib/apt/lists/* && \
+    curl -L https://goo.gl/ExjLDP | sudo bsdtar zxf - -C /usr/local --strip-components 2 && \
+    ln -s -f /usr/local/MATLAB/R2017a/bin/glnxa64/mlint /usr/local/bin
 
 # Install SciPy, SymPy, Pandas, and Jupyter Notebook for Python3 and Octave
 RUN pip3 install -U pip \
