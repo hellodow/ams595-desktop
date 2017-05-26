@@ -1,4 +1,5 @@
 #!/usr/bin/env python
+#pylint: disable=invalid-name
 
 """
 Launch Jupyter Notebook within a Docker notebook image and
@@ -96,14 +97,13 @@ def handle_interrupt():
     try:
         print("Press Ctrl-C again to stop the server: ")
         time.sleep(5)
+        print('Invalid response. Resuming...')
     except KeyboardInterrupt:
         print('*** Stopping the server.')
         subprocess.Popen(["docker", "exec", container,
-                              "killall", "startvnc.sh"],
-                             stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+                          "killall", "startvnc.sh"],
+                         stdout=subprocess.PIPE, stderr=subprocess.PIPE)
         sys.exit(0)
-
-        print('Invalid response. Resuming...')
 
 
 if __name__ == "__main__":
@@ -135,7 +135,7 @@ if __name__ == "__main__":
 
     # Generate a container ID and find an unused port
     container = id_generator()
-    port = str(find_free_port(8888, 50))
+    port_http = str(find_free_port(8888, 50))
 
     # Create directory .ssh if not exist
     if not os.path.exists(homedir + "/.ssh"):
@@ -153,12 +153,12 @@ if __name__ == "__main__":
 
     # Start the docker image in the background and pipe the stderr
     subprocess.call(["docker", "run", "-d", "--rm", "--name", container,
-                     "-p", "127.0.0.1:" + port + ":" + port,
+                     "-p", "127.0.0.1:" + port_http + ":" + port_http,
                      "--env", "HOST_UID=" + uid] +
-                     volumes +
+                    volumes +
                     ["-w", docker_home + "/shared",
                      image,
-                    "jupyter-notebook --no-browser --ip=0.0.0.0 --port " + port +
+                     "jupyter-notebook --no-browser --ip=0.0.0.0 --port " + port_http +
                      " >> " + docker_home + "/.log/jupyter.log 2>&1"])
 
     wait_for_url = True
@@ -185,7 +185,7 @@ if __name__ == "__main__":
                         if not notebook:
                             url = "http://localhost:" + stdout_line[ind + 15:-1]
                         else:
-                            url = "http://localhost:" + port + "/notebooks/" + notebook + \
+                            url = "http://localhost:" + port_http + "/notebooks/" + notebook + \
                                 stdout_line[stdout_line.find("?token="):-1]
 
                         print("Copy/paste this URL into your browser when you connect for the first time:")
