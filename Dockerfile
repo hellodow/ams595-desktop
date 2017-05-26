@@ -61,12 +61,19 @@ RUN add-apt-repository ppa:webupd8team/atom && \
         git-plus \
         merge-conflicts \
         split-diff \
+        gcc-make-run \
+        intentions \
+        busy-signal \
+        linter-ui-default \
+        linter \
+        linter-gcc \
+        linter-gfortran \
+        linter-pylint \
         dbg \
         output-panel \
         dbg-gdb \
         python-autopep8 \
-        formatter \
-        formatter-clangformat && \
+        clang-format && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
 
@@ -82,8 +89,7 @@ RUN pip3 install -U pip \
          nose \
          sphinx \
          autopep8 \
-         pylama \
-         pylama-pylint \
+         pylint \
          flufl.lock \
          ply \
          pytest \
