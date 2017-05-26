@@ -11,6 +11,7 @@ from __future__ import print_function  # Only Python 2.x
 
 import argparse
 import sys
+import subprocess
 import time
 
 # Process command-line arguments
@@ -118,10 +119,25 @@ def get_screen_resolution():
 
     return str(width) + 'x' + str(height)
 
+def handleKeyboardInterrupt():
+    """Handle keyboard interrupt"""
+    try:
+        print("Press Ctrl-C again to stop the server: ")
+        yes = ""
+        time.sleep(5)
+    except KeyboardInterrupt:
+        print('*** Stopping the server.')
+        p = subprocess.Popen(["docker", "exec", container,
+                              "killall", "startvnc.sh"],
+                             stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        out, err = p.communicate()
+        sys.exit(0)
+
+        print('Invalid response. Resuming...')
+
 
 if __name__ == "__main__":
     import os
-    import subprocess
     import webbrowser
     import platform
 
@@ -144,7 +160,7 @@ if __name__ == "__main__":
 
         # Delete dangling image
         if img and subprocess.check_output(['docker', 'images', '-f', 'dangling=true', '-q']).find(img) >= 0:
-            err = subprocess.call(["docker", "rmi", "-f", img])
+            err = subprocess.call(["docker", "rmi", "-f", img.decode('utf-8')])
 
     # Generate a container ID and find an unused port
     container = id_generator()
@@ -209,24 +225,22 @@ if __name__ == "__main__":
                         sys.stdout.write(stdout_line)
 
             print("Press Ctrl-C to stop the server.")
-            while True:
-                time.sleep(3600)
+
+            # Wait till the container exits or Ctlr-C is pressed
+            subprocess.check_output(["docker", "exec", container,
+                                     "tail", "-f", "/dev/null"])
         except subprocess.CalledProcessError:
-            time.sleep(1)
+            try:
+                # If Docker process no long exists, exit
+                if not subprocess.check_output(['docker', 'ps', '-q', '-f' 'name=' + container]):
+                    print('Docker container is no longer running')
+                    sys.exit(-1)
+                time.sleep(1)
+            except KeyboardInterrupt:
+                handleKeyboardInterrupt()
+
             continue
         except KeyboardInterrupt:
-            try:
-                print("Press Ctrl-C again to stop the server: ")
-                yes = ""
-                time.sleep(5)
-            except KeyboardInterrupt:
-                print('*** Stopping the server.')
-                p = subprocess.Popen(["docker", "exec", container,
-                                      "killall", "startvnc.sh"],
-                                     stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-                out, err = p.communicate()
-                sys.exit(0)
-
-            print('Invalid response. Resuming...')
+            handleKeyboardInterrupt()
         except OSError:
-            system.exit(-1)
+            sys.exit(-1)

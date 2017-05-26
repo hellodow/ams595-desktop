@@ -27,9 +27,8 @@ RUN add-apt-repository ppa:webupd8team/atom && \
         wget \
         gdb \
         ddd \
+        valgrind \
         electric-fence \
-        gfortran \
-        pkg-config \
         ccache \
         \
         liblapack-dev \
@@ -38,7 +37,8 @@ RUN add-apt-repository ppa:webupd8team/atom && \
         mpich \
         \
         meld \
-        atom && \
+        atom \
+        clang-format && \
     apt-get install -y --no-install-recommends \
         octave \
         gnuplot-x11 \
@@ -52,9 +52,21 @@ RUN add-apt-repository ppa:webupd8team/atom && \
         python3-dev \
         pandoc \
         ttf-dejavu && \
-    apm install language-matlab linter-matlab git-plus merge-conflicts split-diff python-autopep8 && \
-    pip install -U sympy && \
-    octave --eval 'pkg install -forge struct parallel symbolic odepkg' && \
+    apm install \
+        language-cpp14 \
+        language-matlab \
+        language-fortran \
+        autocomplete-python \
+        autocomplete-fortran \
+        git-plus \
+        merge-conflicts \
+        split-diff \
+        dbg \
+        output-panel \
+        dbg-gdb \
+        python-autopep8 \
+        formatter \
+        formatter-clangformat && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
 
@@ -70,6 +82,8 @@ RUN pip3 install -U pip \
          nose \
          sphinx \
          autopep8 \
+         pylama \
+         pylama-pylint \
          flufl.lock \
          ply \
          pytest \
