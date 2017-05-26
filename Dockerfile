@@ -52,36 +52,11 @@ RUN add-apt-repository ppa:webupd8team/atom && \
         python3-dev \
         pandoc \
         ttf-dejavu && \
-    apm install \
-        language-cpp14 \
-        language-matlab \
-        language-fortran \
-        language-docker \
-        autocomplete-python \
-        autocomplete-fortran \
-        git-plus \
-        merge-conflicts \
-        split-diff \
-        gcc-make-run \
-        intentions \
-        busy-signal \
-        linter-ui-default \
-        linter \
-        linter-gcc \
-        linter-gfortran \
-        linter-pylint \
-        linter-matlab \
-        dbg \
-        output-panel \
-        dbg-gdb \
-        python-autopep8 \
-        clang-format && \
     apt-get clean && \
-    rm -rf /var/lib/apt/lists/* && \
-    curl -L https://goo.gl/ExjLDP | sudo bsdtar zxf - -C /usr/local --strip-components 2 && \
-    ln -s -f /usr/local/MATLAB/R2017a/bin/glnxa64/mlint /usr/local/bin
+    rm -rf /var/lib/apt/lists/*
 
 # Install SciPy, SymPy, Pandas, and Jupyter Notebook for Python3 and Octave
+# Customize Atom for Octave and MATLAB
 RUN pip3 install -U pip \
          setuptools && \
     pip3 install -U \
@@ -124,6 +99,32 @@ RUN pip3 install -U pip \
         calico-spell-check && \
     pip3 install -U octave_kernel && \
     python3 -m octave_kernel.install && \
+    apm install \
+        language-cpp14 \
+        language-matlab \
+        language-fortran \
+        language-docker \
+        autocomplete-python \
+        autocomplete-fortran \
+        git-plus \
+        merge-conflicts \
+        split-diff \
+        gcc-make-run \
+        intentions \
+        busy-signal \
+        linter-ui-default \
+        linter \
+        linter-gcc \
+        linter-gfortran \
+        linter-pylint \
+        linter-matlab \
+        dbg \
+        output-panel \
+        dbg-gdb \
+        python-autopep8 \
+        clang-format && \
+    curl -L https://goo.gl/ExjLDP | sudo bsdtar zxf - -C /usr/local --strip-components 2 && \
+    ln -s -f /usr/local/MATLAB/R2017a/bin/glnxa64/mlint /usr/local/bin && \
     rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
 ########################################################
