@@ -56,6 +56,7 @@ RUN add-apt-repository ppa:webupd8team/atom && \
         language-cpp14 \
         language-matlab \
         language-fortran \
+        language-docker \
         autocomplete-python \
         autocomplete-fortran \
         git-plus \
