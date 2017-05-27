@@ -45,7 +45,7 @@ This will download and run the Docker image and then launch your default web bro
 Besides using the Docker Image as an X-Windows desktop environment, you can also use it as a Jupyter-Notebook server with the
 default web browser on your computer. Simply replace `docker-desktop` with `docker-jupyter` in the preceding commands. That is, on Windows run the commands
 ```
-curl https://raw.githubusercontent.com/compdatasci/docker-desktop/ams595/docker-jupyter -outfile docker-desktop
+curl https://raw.githubusercontent.com/compdatasci/docker-desktop/ams595/docker-jupyter -outfile docker-jupyter
 python docker-jupyter -p
 ```
 or on Linux and Mac run the commands
