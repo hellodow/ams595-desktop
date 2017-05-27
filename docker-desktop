@@ -19,7 +19,7 @@ import time
 parser = argparse.ArgumentParser(description=__doc__)
 
 parser.add_argument('-u', "--user",
-                    help='username used by the image. The default is retrieve from image.',
+                    help='username used by the image. The default is to retrieve from image.',
                     default="")
 
 parser.add_argument('-i', '--image',
