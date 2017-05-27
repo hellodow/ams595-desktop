@@ -99,6 +99,26 @@ RUN pip3 install -U pip \
         calico-spell-check && \
     pip3 install -U octave_kernel && \
     python3 -m octave_kernel.install && \
+    curl -L https://goo.gl/ExjLDP | bsdtar zxf - -C /usr/local --strip-components 2 && \
+    ln -s -f /usr/local/MATLAB/R2017a/bin/glnxa64/mlint /usr/local/bin && \
+    rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
+
+########################################################
+# Customization for user
+########################################################
+ENV CDS_USER=ams595
+ENV DOCKER_USER=$CDS_USER \
+    DOCKER_GROUP=$CDS_USER \
+    DOCKER_HOME=/home/$CDS_USER \
+    HOME=/home/$CDS_USER
+
+RUN usermod -l $DOCKER_USER -d $DOCKER_HOME -m x11vnc && \
+    groupmod -n $DOCKER_USER x11vnc && \
+    echo "$DOCKER_USER:docker" | chpasswd && \
+    echo "$DOCKER_USER ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers && \
+    echo "export OMP_NUM_THREADS=\$(nproc)" >> $DOCKER_HOME/.profile && \
+    touch $DOCKER_HOME/.log/jupyter.log && \
+    touch $DOCKER_HOME/.log/vnc.log && \
     apm install \
         language-cpp14 \
         language-matlab \
@@ -123,26 +143,6 @@ RUN pip3 install -U pip \
         dbg-gdb \
         python-autopep8 \
         clang-format && \
-    curl -L https://goo.gl/ExjLDP | bsdtar zxf - -C /usr/local --strip-components 2 && \
-    ln -s -f /usr/local/MATLAB/R2017a/bin/glnxa64/mlint /usr/local/bin && \
-    rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
-
-########################################################
-# Customization for user
-########################################################
-ENV CDS_USER=ams595
-ENV DOCKER_USER=$CDS_USER \
-    DOCKER_GROUP=$CDS_USER \
-    DOCKER_HOME=/home/$CDS_USER \
-    HOME=/home/$CDS_USER
-
-RUN usermod -l $DOCKER_USER -d $DOCKER_HOME -m x11vnc && \
-    groupmod -n $DOCKER_USER x11vnc && \
-    echo "$DOCKER_USER:docker" | chpasswd && \
-    echo "$DOCKER_USER ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers && \
-    echo "export OMP_NUM_THREADS=\$(nproc)" >> $DOCKER_HOME/.profile && \
-    touch $DOCKER_HOME/.log/jupyter.log && \
-    touch $DOCKER_HOME/.log/vnc.log && \
     chown -R $DOCKER_USER:$DOCKER_GROUP $DOCKER_HOME
 
 WORKDIR $DOCKER_HOME
