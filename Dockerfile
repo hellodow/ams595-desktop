@@ -123,7 +123,7 @@ RUN pip3 install -U pip \
         dbg-gdb \
         python-autopep8 \
         clang-format && \
-    curl -L https://goo.gl/ExjLDP | sudo bsdtar zxf - -C /usr/local --strip-components 2 && \
+    curl -L https://goo.gl/ExjLDP | bsdtar zxf - -C /usr/local --strip-components 2 && \
     ln -s -f /usr/local/MATLAB/R2017a/bin/glnxa64/mlint /usr/local/bin && \
     rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
