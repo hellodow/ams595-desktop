@@ -76,11 +76,11 @@ def find_free_port(port, retries):
 
     sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
-    for port in random_ports(port, retries + 1):
+    for prt in random_ports(port, retries + 1):
         try:
-            sock.bind(("127.0.0.1", port))
+            sock.bind(("127.0.0.1", prt))
             sock.close()
-            return port
+            return prt
         except socket.error:
             continue
 
@@ -103,7 +103,7 @@ def wait_net_service(port, timeout=30):
             continue
         else:
             sock.close()
-            time.sleep(1)
+            time.sleep(2)
             return True
 
 
@@ -161,6 +161,7 @@ if __name__ == "__main__":
         # Delete dangling image
         if img and subprocess.check_output(['docker', 'images', '-f',
                                             'dangling=true', '-q']).find(img) >= 0:
+            print("Deleting old image " + img.decode('utf-8')[:-1] + "...")
             err = subprocess.call(["docker", "rmi", "-f", img.decode('utf-8')[:-1]])
 
     # Generate a container ID and find an unused port
