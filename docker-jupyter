@@ -131,8 +131,7 @@ if __name__ == "__main__":
         # Delete dangling image
         if img and subprocess.check_output(['docker', 'images', '-f',
                                             'dangling=true', '-q']).find(img) >= 0:
-            print("Deleting old image " + img.decode('utf-8')[:-1] + "...")
-            err = subprocess.call(["docker", "rmi", "-f", img.decode('utf-8')[:-1]])
+            subprocess.Popen(["docker", "rmi", "-f", img.decode('utf-8')[:-1]])
 
     # Generate a container ID and find an unused port
     container = id_generator()
