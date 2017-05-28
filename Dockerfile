@@ -47,6 +47,10 @@ RUN add-apt-repository ppa:webupd8team/atom && \
         libatlas3-base \
         pstoedit \
         octave-info && \
+    pip install sympy && \
+    octave --eval 'pkg install -forge symbolic odepkg' && \
+    curl -L https://goo.gl/ExjLDP | bsdtar zxf - -C /usr/local --strip-components 2 && \
+    ln -s -f /usr/local/MATLAB/R2017a/bin/glnxa64/mlint /usr/local/bin && \
     apt-get install -y --no-install-recommends \
         python3-pip \
         python3-dev \
@@ -68,7 +72,7 @@ RUN pip3 install -U pip \
          nose \
          sphinx \
          autopep8 \
-         pylint \
+         flake8 \
          flufl.lock \
          ply \
          pytest \
@@ -99,8 +103,6 @@ RUN pip3 install -U pip \
         calico-spell-check && \
     pip3 install -U octave_kernel && \
     python3 -m octave_kernel.install && \
-    curl -L https://goo.gl/ExjLDP | bsdtar zxf - -C /usr/local --strip-components 2 && \
-    ln -s -f /usr/local/MATLAB/R2017a/bin/glnxa64/mlint /usr/local/bin && \
     rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
 ########################################################
@@ -137,7 +139,7 @@ RUN usermod -l $DOCKER_USER -d $DOCKER_HOME -m x11vnc && \
         linter \
         linter-gcc \
         linter-gfortran \
-        linter-pylint \
+        linter-flake8 \
         linter-matlab \
         dbg \
         output-panel \
@@ -152,4 +154,4 @@ WORKDIR $DOCKER_HOME
 
 USER root
 ENTRYPOINT ["/sbin/my_init","--quiet","--","/sbin/setuser","ams595","/bin/bash","-l","-c"]
-CMD ["/bin/bash","-l","-i"]
+CMD ["$DOCKER_SHELL","-l","-i"]

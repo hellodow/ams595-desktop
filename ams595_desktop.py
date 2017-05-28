@@ -1,8 +1,7 @@
 #!/usr/bin/env python
-#pylint: disable=invalid-name,line-too-long
 
 """
-Launch Jupyter Notebook within a Docker notebook image and
+Launch a Docker image with Ubuntu and LXDE window manager, and
 automatically open up the URL in the default web browser.
 """
 
@@ -19,11 +18,13 @@ import time
 parser = argparse.ArgumentParser(description=__doc__)
 
 parser.add_argument('-u', "--user",
-                    help='username used by the image. The default is to retrieve from image.',
+                    help='username used by the image. ' +
+                    ' The default is to retrieve from image.',
                     default="")
 
 parser.add_argument('-i', '--image',
-                    help='The Docker image to use The default is ams595/desktop.',
+                    help='The Docker image to use. ' +
+                    'The default is ams595/desktop.',
                     default="ams595/desktop")
 parser.add_argument('-t', '--tag',
                     help='Tag of the image. The default is latest. ' +
@@ -32,18 +33,15 @@ parser.add_argument('-t', '--tag',
 
 
 parser.add_argument('-p', '--pull',
-                    help='Pull the latest Docker image. The default is not to pull.',
+                    help='Pull the latest Docker image. ' +
+                    ' The default is not to pull.',
                     dest='pull', action='store_true')
 
 parser.set_defaults(pull=False)
 
-parser.add_argument('notebook', nargs='?',
-                    help='The notebook to open.', default="")
-
 args = parser.parse_args()
 image = args.image
 user = args.user
-notebook = args.notebook
 pull = args.pull
 
 # Append tag to image if the image has no tag
@@ -92,6 +90,40 @@ def find_free_port(port, retries):
     sys.exit(-1)
 
 
+def wait_net_service(port, timeout=30):
+    """ Wait for network service to appear.
+    """
+    import socket
+
+    for _ in range(timeout * 10):
+        try:
+            sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+            sock.connect(("127.0.0.1", port))
+        except socket.error:
+            sock.close()
+            time.sleep(0.1)
+            continue
+        else:
+            sock.close()
+            time.sleep(2)
+            return True
+
+
+def get_screen_resolution():
+    """Obtain the local screen resolution."""
+
+    if sys.version_info.major > 2:
+        import tkinter as tk
+    else:
+        import Tkinter as tk
+
+    root = tk.Tk()
+    root.withdraw()
+    width, height = root.winfo_screenwidth(), root.winfo_screenheight()
+
+    return str(width) + 'x' + str(height)
+
+
 def handle_interrupt():
     """Handle keyboard interrupt"""
     try:
@@ -130,12 +162,13 @@ if __name__ == "__main__":
 
         # Delete dangling image
         if img and subprocess.check_output(['docker', 'images', '-f',
-                                            'dangling=true', '-q']).find(img) >= 0:
+                                            'dangling=true',
+                                            '-q']).find(img) >= 0:
             subprocess.Popen(["docker", "rmi", "-f", img.decode('utf-8')[:-1]])
 
     # Generate a container ID and find an unused port
     container = id_generator()
-    port_http = str(find_free_port(8888, 50))
+    port_vnc = str(find_free_port(6080, 50))
 
     # Create directory .ssh if not exist
     if not os.path.exists(homedir + "/.ssh"):
@@ -145,56 +178,60 @@ if __name__ == "__main__":
         docker_home = "/home/" + user
     else:
         docker_home = subprocess.check_output(["docker", "run", "--rm", image,
-                                               "echo $DOCKER_HOME"]).decode('utf-8')[:-1]
+                                               "echo $DOCKER_HOME"]). \
+            decode('utf-8')[:-1]
 
-    volumes = ["-v", pwd + ":" + docker_home + "/shared"]
+    volumes = ["-v", pwd + ":" + docker_home + "/shared",
+               "-v", "ams595_config:" + docker_home + "/.config",
+               "-v", homedir + "/.ssh" + ":" + docker_home + "/.ssh"]
 
     print("Starting up docker image...")
-
     # Start the docker image in the background and pipe the stderr
     subprocess.call(["docker", "run", "-d", "--rm", "--name", container,
-                     "-p", "127.0.0.1:" + port_http + ":" + port_http,
+                     "-p", "127.0.0.1:" + port_vnc + ":6080",
+                     "--env", "RESOLUT=" + get_screen_resolution(),
                      "--env", "HOST_UID=" + uid] +
                     volumes +
                     ["-w", docker_home + "/shared",
-                     image,
-                     "jupyter-notebook --no-browser --ip=0.0.0.0 --port " + port_http +
-                     " >> " + docker_home + "/.log/jupyter.log 2>&1"])
+                     image, "startvnc.sh >> " + docker_home + "/.log/vnc.log"])
 
     wait_for_url = True
+
     # Wait for user to press Ctrl-C
     while True:
         try:
             if wait_for_url:
                 # Wait until the file is not empty
                 while not subprocess.check_output(["docker", "exec", container,
-                                                   "cat", docker_home + "/.log/jupyter.log"]):
+                                                   "cat", docker_home +
+                                                   "/.log/vnc.log"]):
                     time.sleep(1)
 
                 p = subprocess.Popen(["docker", "exec", container,
-                                      "tail", "-F", docker_home + "/.log/jupyter.log"],
-                                     stdout=subprocess.PIPE, stderr=subprocess.PIPE,
+                                      "tail", "-F",
+                                      docker_home + "/.log/vnc.log"],
+                                     stdout=subprocess.PIPE,
+                                     stderr=subprocess.PIPE,
                                      universal_newlines=True)
 
                 # Monitor the stdout to extract the URL
                 for stdout_line in iter(p.stdout.readline, ""):
-                    ind = stdout_line.find("http://0.0.0.0:")
+                    ind = stdout_line.find("http://localhost:")
 
                     if ind >= 0:
                         # Open browser if found URL
-                        if not notebook:
-                            url = "http://localhost:" + stdout_line[ind + 15:-1]
-                        else:
-                            url = "http://localhost:" + port_http + "/notebooks/" + notebook + \
-                                stdout_line[stdout_line.find("?token="):-1]
+                        url = stdout_line.replace(":6080/",
+                                                  ':' + port_vnc + "/")
+                        sys.stdout.write(url)
 
-                        print("Copy/paste this URL into your browser when you connect for the first time:")
-                        print("    ", url)
-                        webbrowser.open(url)
+                        wait_net_service(int(port_vnc))
+                        webbrowser.open(url[ind:-1])
                         p.stdout.close()
                         p.terminate()
                         wait_for_url = False
                         break
+                    else:
+                        sys.stdout.write(stdout_line)
 
             print("Press Ctrl-C to stop the server.")
 
@@ -204,7 +241,9 @@ if __name__ == "__main__":
         except subprocess.CalledProcessError:
             try:
                 # If Docker process no long exists, exit
-                if not subprocess.check_output(['docker', 'ps', '-q', '-f' 'name=' + container]):
+                if not subprocess.check_output(['docker', 'ps',
+                                                '-q', '-f',
+                                                'name=' + container]):
                     print('Docker container is no longer running')
                     sys.exit(-1)
                 time.sleep(1)

@@ -28,41 +28,41 @@ Download the Docker Community Edition for free at https://www.docker.com/communi
 ### Running the Docker Image on Windows
 To run the docker image, start `Windows PowerShell` on Windows. Using the `cd` command to change to the working directory where you will store your codes and data. Then run the following two commands:
 ```
-curl https://raw.githubusercontent.com/compdatasci/docker-desktop/ams595/docker_desktop.py -outfile docker_desktop.py
-python docker_desktop.py -p
+curl https://raw.githubusercontent.com/compdatasci/docker-desktop/ams595/ams595_desktop.py -outfile ams595_desktop.py
+python ams595_desktop.py -p
 ```
 This will download and run the Docker image and then launch your default web browser to show the desktop environment. The `-p` option above is optional, and it instructs the Python script to pull and update the image to the latest version.
 
 ### Running the Docker Image on Linux or Mac
 To run the docker image, start a terminal. Using the `cd` command to change to the working directory where you will store your codes and data, and then run the two commands:
 ```
-curl -s -O https://raw.githubusercontent.com/compdatasci/docker-desktop/ams595/docker_desktop.py
-python docker_desktop.py -p
+curl -s -O https://raw.githubusercontent.com/compdatasci/docker-desktop/ams595/ams595_desktop.py
+python ams595_desktop.py -p
 ```
 This will download and run the Docker image and then launch your default web browser to show the desktop environment. The `-p` option above is optional, and it instructs the Python script to pull and update the image to the latest version.
 
 ### Running the Docker Image as Jupyter-Notebook Server
 Besides using the Docker Image as an X-Windows desktop environment, you can also use it as a Jupyter-Notebook server with the
-default web browser on your computer. Simply replace `docker_desktop.py` with `docker_jupyter.py` in the preceding commands. That is, on Windows run the commands
+default web browser on your computer. Simply replace `ams595_desktop.py` with `ams595_jupyter.py` in the preceding commands. That is, on Windows run the commands
 ```
-curl https://raw.githubusercontent.com/compdatasci/docker-desktop/ams595/docker_jupyter.py -outfile docker_jupyter.py
-python docker_jupyter.py -p
+curl https://raw.githubusercontent.com/compdatasci/docker-desktop/ams595/ams595_jupyter.py -outfile ams595_jupyter.py
+python ams595_jupyter.py -p
 ```
 or on Linux and Mac run the commands
 ```
-curl -s -O https://raw.githubusercontent.com/compdatasci/docker-desktop/ams595/docker_jupyter.py
-python docker_jupyter.py -p
+curl -s -O https://raw.githubusercontent.com/compdatasci/docker-desktop/ams595/ams595_jupyter.py
+python ams595_jupyter.py -p
 ```
 in the PowerShell or terminal prompt, in the directory where your Jupyter notebooks are stored.
 
 ### Running the Docker Image Offline
 After you have download the Docker image using the `curl` and `python` commands above, you can run the image offline without internet connection using the following command:
 ```
-python docker_desktop.py
+python ams595_desktop.py
 ```
 or
 ```
-python docker_jupyter.py
+python ams595_jupyter.py
 ```
 in the directory where you ran the `curl` command above.
 
