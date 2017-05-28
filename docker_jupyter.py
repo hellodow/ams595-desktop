@@ -1,5 +1,4 @@
 #!/usr/bin/env python
-#pylint: disable=invalid-name,line-too-long
 
 """
 Launch Jupyter Notebook within a Docker notebook image and
@@ -19,11 +18,13 @@ import time
 parser = argparse.ArgumentParser(description=__doc__)
 
 parser.add_argument('-u', "--user",
-                    help='username used by the image. The default is to retrieve from image.',
+                    help='username used by the image. ' +
+                    ' The default is to retrieve from image.',
                     default="")
 
 parser.add_argument('-i', '--image',
-                    help='The Docker image to use The default is ams595/desktop.',
+                    help='The Docker image to use. ' +
+                    'The default is ams595/desktop.',
                     default="ams595/desktop")
 parser.add_argument('-t', '--tag',
                     help='Tag of the image. The default is latest. ' +
@@ -32,7 +33,8 @@ parser.add_argument('-t', '--tag',
 
 
 parser.add_argument('-p', '--pull',
-                    help='Pull the latest Docker image. The default is not to pull.',
+                    help='Pull the latest Docker image. ' +
+                    ' The default is not to pull.',
                     dest='pull', action='store_true')
 
 parser.set_defaults(pull=False)
@@ -130,7 +132,8 @@ if __name__ == "__main__":
 
         # Delete dangling image
         if img and subprocess.check_output(['docker', 'images', '-f',
-                                            'dangling=true', '-q']).find(img) >= 0:
+                                            'dangling=true',
+                                            '-q']).find(img) >= 0:
             subprocess.Popen(["docker", "rmi", "-f", img.decode('utf-8')[:-1]])
 
     # Generate a container ID and find an unused port
@@ -145,7 +148,8 @@ if __name__ == "__main__":
         docker_home = "/home/" + user
     else:
         docker_home = subprocess.check_output(["docker", "run", "--rm", image,
-                                               "echo $DOCKER_HOME"]).decode('utf-8')[:-1]
+                                               "echo $DOCKER_HOME"]). \
+            decode('utf-8')[:-1]
 
     volumes = ["-v", pwd + ":" + docker_home + "/shared"]
 
@@ -158,7 +162,8 @@ if __name__ == "__main__":
                     volumes +
                     ["-w", docker_home + "/shared",
                      image,
-                     "jupyter-notebook --no-browser --ip=0.0.0.0 --port " + port_http +
+                     "jupyter-notebook --no-browser --ip=0.0.0.0 --port " +
+                     port_http +
                      " >> " + docker_home + "/.log/jupyter.log 2>&1"])
 
     wait_for_url = True
@@ -168,12 +173,15 @@ if __name__ == "__main__":
             if wait_for_url:
                 # Wait until the file is not empty
                 while not subprocess.check_output(["docker", "exec", container,
-                                                   "cat", docker_home + "/.log/jupyter.log"]):
+                                                   "cat", docker_home +
+                                                   "/.log/jupyter.log"]):
                     time.sleep(1)
 
                 p = subprocess.Popen(["docker", "exec", container,
-                                      "tail", "-F", docker_home + "/.log/jupyter.log"],
-                                     stdout=subprocess.PIPE, stderr=subprocess.PIPE,
+                                      "tail", "-F",
+                                      docker_home + "/.log/jupyter.log"],
+                                     stdout=subprocess.PIPE,
+                                     stderr=subprocess.PIPE,
                                      universal_newlines=True)
 
                 # Monitor the stdout to extract the URL
@@ -183,12 +191,14 @@ if __name__ == "__main__":
                     if ind >= 0:
                         # Open browser if found URL
                         if not notebook:
-                            url = "http://localhost:" + stdout_line[ind + 15:-1]
+                            url = "http://localhost:" + stdout_line[ind+15:-1]
                         else:
-                            url = "http://localhost:" + port_http + "/notebooks/" + notebook + \
+                            url = "http://localhost:" + port_http + \
+                                "/notebooks/" + notebook + \
                                 stdout_line[stdout_line.find("?token="):-1]
 
-                        print("Copy/paste this URL into your browser when you connect for the first time:")
+                        print("Copy/paste this URL into your browser " +
+                              "when you connect for the first time:")
                         print("    ", url)
                         webbrowser.open(url)
                         p.stdout.close()
@@ -204,7 +214,9 @@ if __name__ == "__main__":
         except subprocess.CalledProcessError:
             try:
                 # If Docker process no long exists, exit
-                if not subprocess.check_output(['docker', 'ps', '-q', '-f' 'name=' + container]):
+                if not subprocess.check_output(['docker', 'ps',
+                                                '-q', '-f',
+                                                'name=' + container]):
                     print('Docker container is no longer running')
                     sys.exit(-1)
                 time.sleep(1)

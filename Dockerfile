@@ -68,6 +68,7 @@ RUN pip3 install -U pip \
          nose \
          sphinx \
          autopep8 \
+         flake8 \
          pylint \
          flufl.lock \
          ply \
@@ -137,7 +138,7 @@ RUN usermod -l $DOCKER_USER -d $DOCKER_HOME -m x11vnc && \
         linter \
         linter-gcc \
         linter-gfortran \
-        linter-pylint \
+        linter-flake8 \
         linter-matlab \
         dbg \
         output-panel \
@@ -152,4 +153,4 @@ WORKDIR $DOCKER_HOME
 
 USER root
 ENTRYPOINT ["/sbin/my_init","--quiet","--","/sbin/setuser","ams595","/bin/bash","-l","-c"]
-CMD ["/bin/bash","-l","-i"]
+CMD ["$DOCKER_SHELL","-l","-i"]
