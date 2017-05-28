@@ -1,4 +1,5 @@
 #!/usr/bin/env python
+#pylint: disable=invalid-name
 
 """
 Launch a Docker image with Ubuntu and LXDE window manager, and
@@ -18,14 +19,15 @@ import time
 parser = argparse.ArgumentParser(description=__doc__)
 
 parser.add_argument('-u', "--user",
-                    help='username used by the image. The default is retrieve from image.',
+                    help='username used by the image. The default is to retrieve from image.',
                     default="")
 
 parser.add_argument('-i', '--image',
                     help='The Docker image to use The default is ams595/desktop.',
                     default="ams595/desktop")
 parser.add_argument('-t', '--tag',
-                    help='Tag of the image. The default is latest. If the image already has a tag, its tag prevails.',
+                    help='Tag of the image. The default is latest. ' +
+                    'If the image already has a tag, its tag prevails.',
                     default="latest")
 
 
@@ -74,12 +76,12 @@ def find_free_port(port, retries):
 
     sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
-    for port in random_ports(port, retries + 1):
+    for prt in random_ports(port, retries + 1):
         try:
-            sock.bind(("127.0.0.1", port))
+            sock.bind(("127.0.0.1", prt))
             sock.close()
-            return port
-        except socket.error as e:
+            return prt
+        except socket.error:
             continue
 
     print("Error: Could not find a free port.")
@@ -91,17 +93,17 @@ def wait_net_service(port, timeout=30):
     """
     import socket
 
-    for i in range(timeout * 10):
+    for _ in range(timeout * 10):
         try:
             sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
             sock.connect(("127.0.0.1", port))
-        except socket.error as err:
+        except socket.error:
             sock.close()
             time.sleep(0.1)
             continue
         else:
             sock.close()
-            time.sleep(1)
+            time.sleep(2)
             return True
 
 
@@ -119,21 +121,19 @@ def get_screen_resolution():
 
     return str(width) + 'x' + str(height)
 
-def handleKeyboardInterrupt():
+
+def handle_interrupt():
     """Handle keyboard interrupt"""
     try:
         print("Press Ctrl-C again to stop the server: ")
-        yes = ""
         time.sleep(5)
+        print('Invalid response. Resuming...')
     except KeyboardInterrupt:
         print('*** Stopping the server.')
-        p = subprocess.Popen(["docker", "exec", container,
-                              "killall", "startvnc.sh"],
-                             stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-        out, err = p.communicate()
+        subprocess.Popen(["docker", "exec", container,
+                          "killall", "startvnc.sh"],
+                         stdout=subprocess.PIPE, stderr=subprocess.PIPE)
         sys.exit(0)
-
-        print('Invalid response. Resuming...')
 
 
 if __name__ == "__main__":
@@ -148,7 +148,7 @@ if __name__ == "__main__":
     else:
         uid = ""
 
-    img = subprocess.check_output(['docker', 'images', '-q', image])[:-1]
+    img = subprocess.check_output(['docker', 'images', '-q', image])
     if pull or not img:
         try:
             err = subprocess.call(["docker", "pull", image])
@@ -159,8 +159,9 @@ if __name__ == "__main__":
             sys.exit(err)
 
         # Delete dangling image
-        if img and subprocess.check_output(['docker', 'images', '-f', 'dangling=true', '-q']).find(img) >= 0:
-            err = subprocess.call(["docker", "rmi", "-f", img.decode('utf-8')])
+        if img and subprocess.check_output(['docker', 'images', '-f',
+                                            'dangling=true', '-q']).find(img) >= 0:
+            subprocess.Popen(["docker", "rmi", "-f", img.decode('utf-8')[:-1]])
 
     # Generate a container ID and find an unused port
     container = id_generator()
@@ -237,10 +238,10 @@ if __name__ == "__main__":
                     sys.exit(-1)
                 time.sleep(1)
             except KeyboardInterrupt:
-                handleKeyboardInterrupt()
+                handle_interrupt()
 
             continue
         except KeyboardInterrupt:
-            handleKeyboardInterrupt()
+            handle_interrupt()
         except OSError:
             sys.exit(-1)

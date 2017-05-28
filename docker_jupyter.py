@@ -1,4 +1,5 @@
 #!/usr/bin/env python
+#pylint: disable=invalid-name,line-too-long
 
 """
 Launch Jupyter Notebook within a Docker notebook image and
@@ -18,14 +19,15 @@ import time
 parser = argparse.ArgumentParser(description=__doc__)
 
 parser.add_argument('-u', "--user",
-                    help='username used by the image. The default is retrieve from image.',
+                    help='username used by the image. The default is to retrieve from image.',
                     default="")
 
 parser.add_argument('-i', '--image',
                     help='The Docker image to use The default is ams595/desktop.',
                     default="ams595/desktop")
 parser.add_argument('-t', '--tag',
-                    help='Tag of the image. The default is latest. If the image already has a tag, its tag prevails.',
+                    help='Tag of the image. The default is latest. ' +
+                    'If the image already has a tag, its tag prevails.',
                     default="latest")
 
 
@@ -78,34 +80,30 @@ def find_free_port(port, retries):
 
     sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
-    for port in random_ports(port, retries + 1):
+    for prt in random_ports(port, retries + 1):
         try:
-            sock.bind(("127.0.0.1", port))
+            sock.bind(("127.0.0.1", prt))
             sock.close()
-            return port
-        except socket.error as e:
+            return prt
+        except socket.error:
             continue
 
     print("Error: Could not find a free port.")
     sys.exit(-1)
 
 
-def handleKeyboardInterrupt():
+def handle_interrupt():
     """Handle keyboard interrupt"""
     try:
         print("Press Ctrl-C again to stop the server: ")
-        yes = ""
         time.sleep(5)
+        print('Invalid response. Resuming...')
     except KeyboardInterrupt:
         print('*** Stopping the server.')
-        p = subprocess.Popen(["docker", "exec", container,
-                              "killall", "jupyter-notebook"],
-                             stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-        out, err = p.communicate()
+        subprocess.Popen(["docker", "exec", container,
+                          "killall", "startvnc.sh"],
+                         stdout=subprocess.PIPE, stderr=subprocess.PIPE)
         sys.exit(0)
-
-        print('Invalid response. Resuming...')
-
 
 
 if __name__ == "__main__":
@@ -120,7 +118,7 @@ if __name__ == "__main__":
     else:
         uid = ""
 
-    img = subprocess.check_output(['docker', 'images', '-q', image])[:-1]
+    img = subprocess.check_output(['docker', 'images', '-q', image])
     if pull or not img:
         try:
             err = subprocess.call(["docker", "pull", image])
@@ -131,12 +129,13 @@ if __name__ == "__main__":
             sys.exit(err)
 
         # Delete dangling image
-        if img and subprocess.check_output(['docker', 'images', '-f', 'dangling=true', '-q']).find(img) >= 0:
-            err = subprocess.call(["docker", "rmi", "-f", img.decode('utf-8')])
+        if img and subprocess.check_output(['docker', 'images', '-f',
+                                            'dangling=true', '-q']).find(img) >= 0:
+            subprocess.Popen(["docker", "rmi", "-f", img.decode('utf-8')[:-1]])
 
     # Generate a container ID and find an unused port
     container = id_generator()
-    port = str(find_free_port(8888, 50))
+    port_http = str(find_free_port(8888, 50))
 
     # Create directory .ssh if not exist
     if not os.path.exists(homedir + "/.ssh"):
@@ -154,12 +153,12 @@ if __name__ == "__main__":
 
     # Start the docker image in the background and pipe the stderr
     subprocess.call(["docker", "run", "-d", "--rm", "--name", container,
-                     "-p", "127.0.0.1:" + port + ":" + port,
+                     "-p", "127.0.0.1:" + port_http + ":" + port_http,
                      "--env", "HOST_UID=" + uid] +
-                     volumes +
+                    volumes +
                     ["-w", docker_home + "/shared",
                      image,
-                    "jupyter-notebook --no-browser --ip=0.0.0.0 --port " + port +
+                     "jupyter-notebook --no-browser --ip=0.0.0.0 --port " + port_http +
                      " >> " + docker_home + "/.log/jupyter.log 2>&1"])
 
     wait_for_url = True
@@ -186,7 +185,7 @@ if __name__ == "__main__":
                         if not notebook:
                             url = "http://localhost:" + stdout_line[ind + 15:-1]
                         else:
-                            url = "http://localhost:" + port + "/notebooks/" + notebook + \
+                            url = "http://localhost:" + port_http + "/notebooks/" + notebook + \
                                 stdout_line[stdout_line.find("?token="):-1]
 
                         print("Copy/paste this URL into your browser when you connect for the first time:")
@@ -210,10 +209,10 @@ if __name__ == "__main__":
                     sys.exit(-1)
                 time.sleep(1)
             except KeyboardInterrupt:
-                handleKeyboardInterrupt()
+                handle_interrupt()
 
             continue
         except KeyboardInterrupt:
-            handleKeyboardInterrupt()
+            handle_interrupt()
         except OSError:
             sys.exit(-1)
