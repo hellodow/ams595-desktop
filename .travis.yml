@@ -6,7 +6,7 @@ language: python
 before_install:
   # Install latest version of docker-ce
   - curl -O https://apt.dockerproject.org/repo/pool/main/d/docker-engine/docker-engine_17.05.0~ce-0~ubuntu-trusty_amd64.deb
-  - sudo dpk -i docker-engine_17.05.0~ce-0~ubuntu-trusty_amd64.deb
+  - sudo dpkg -i docker-engine_17.05.0~ce-0~ubuntu-trusty_amd64.deb
 
   # Start up xvfb
   - "/sbin/start-stop-daemon --start --quiet --pidfile /tmp/custom_xvfb_99.pid
