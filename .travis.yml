@@ -8,6 +8,9 @@ script:
   - '[[ "$TRAVIS_EVENT_TYPE" == "push" && -n "$TRAVIS_COMMIT_RANGE" &&
         -z "$(git diff --name-only $TRAVIS_COMMIT_RANGE |
             grep -e Dockerfile -e .travis.yml)" ]] ||
-  (docker build --tag ams595/desktop:16.04 --tag ams595/desktop:latest . &&
-   docker push ams595/desktop)'
+    (docker build --tag ams595/desktop:16.04 --tag ams595/desktop:latest . &&
+     touch success)'
+  - './ams595_desktop.py -d && docker stop $(docker ps -q) &&
+     ./ams595_jupyter.py -d && docker stop $(docker ps -q) &&
+     [ ! -f success ] || docker push ams595/desktop'
   - docker images

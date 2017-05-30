@@ -9,48 +9,57 @@ automatically open up the URL in the default web browser.
 
 from __future__ import print_function  # Only Python 2.x
 
-import argparse
 import sys
 import subprocess
 import time
 
-# Process command-line arguments
-parser = argparse.ArgumentParser(description=__doc__)
 
-parser.add_argument('-u', "--user",
-                    help='username used by the image. ' +
-                    ' The default is to retrieve from image.',
-                    default="")
+def parse_args(description):
+    "Parse command-line arguments"
 
-parser.add_argument('-i', '--image',
-                    help='The Docker image to use. ' +
-                    'The default is ams595/desktop.',
-                    default="ams595/desktop")
-parser.add_argument('-t', '--tag',
-                    help='Tag of the image. The default is latest. ' +
-                    'If the image already has a tag, its tag prevails.',
-                    default="latest")
+    import argparse
 
+    # Process command-line arguments
+    parser = argparse.ArgumentParser(description=description)
 
-parser.add_argument('-p', '--pull',
-                    help='Pull the latest Docker image. ' +
-                    ' The default is not to pull.',
-                    dest='pull', action='store_true')
+    parser.add_argument('-u', "--user",
+                        help='username used by the image. ' +
+                        ' The default is to retrieve from image.',
+                        default="")
 
-parser.set_defaults(pull=False)
+    parser.add_argument('-i', '--image',
+                        help='The Docker image to use. ' +
+                        'The default is ams595/desktop.',
+                        default="ams595/desktop")
 
-parser.add_argument('notebook', nargs='?',
-                    help='The notebook to open.', default="")
+    parser.add_argument('-t', '--tag',
+                        help='Tag of the image. The default is latest. ' +
+                        'If the image already has a tag, its tag prevails.',
+                        default="latest")
 
-args = parser.parse_args()
-image = args.image
-user = args.user
-notebook = args.notebook
-pull = args.pull
+    parser.add_argument('-p', '--pull',
+                        help='Pull the latest Docker image. ' +
+                        ' The default is not to pull.',
+                        action='store_true',
+                        default=False)
 
-# Append tag to image if the image has no tag
-if image.find(':') < 0:
-    image += ':' + args.tag
+    parser.add_argument('-d', '--detach',
+                        help='Run in background and print container id',
+                        action='store_true',
+                        default=False)
+
+    parser.add_argument('notebook', nargs='?',
+                         help='The notebook to open.', default="")
+
+    args = parser.parse_args()
+
+    args = parser.parse_args()
+
+    # Append tag to image if the image has no tag
+    if args.image.find(':') < 0:
+        args.image += ':' + args.tag
+
+    return args
 
 
 def random_ports(port, n):
@@ -113,6 +122,8 @@ if __name__ == "__main__":
     import webbrowser
     import platform
 
+    args = parse_args(description=__doc__)
+
     pwd = os.getcwd()
     homedir = os.path.expanduser('~')
     if platform.system() == "Linux":
@@ -120,10 +131,10 @@ if __name__ == "__main__":
     else:
         uid = ""
 
-    img = subprocess.check_output(['docker', 'images', '-q', image])
-    if pull or not img:
+    img = subprocess.check_output(['docker', 'images', '-q', args.image])
+    if args.pull or not img:
         try:
-            err = subprocess.call(["docker", "pull", image])
+            err = subprocess.call(["docker", "pull", args.image])
         except BaseException:
             err = -1
 
@@ -144,10 +155,11 @@ if __name__ == "__main__":
     if not os.path.exists(homedir + "/.ssh"):
         os.mkdir(homedir + "/.ssh")
 
-    if user:
-        docker_home = "/home/" + user
+    if args.user:
+        docker_home = "/home/" + args.user
     else:
-        docker_home = subprocess.check_output(["docker", "run", "--rm", image,
+        docker_home = subprocess.check_output(["docker", "run", "--rm",
+                                               args.image,
                                                "echo $DOCKER_HOME"]). \
             decode('utf-8')[:-1]
 
@@ -161,7 +173,7 @@ if __name__ == "__main__":
                      "--env", "HOST_UID=" + uid] +
                     volumes +
                     ["-w", docker_home + "/shared",
-                     image,
+                     args.image,
                      "jupyter-notebook --no-browser --ip=0.0.0.0 --port " +
                      port_http +
                      " >> " + docker_home + "/.log/jupyter.log 2>&1"])
@@ -190,11 +202,11 @@ if __name__ == "__main__":
 
                     if ind >= 0:
                         # Open browser if found URL
-                        if not notebook:
+                        if not args.notebook:
                             url = "http://localhost:" + stdout_line[ind+15:-1]
                         else:
                             url = "http://localhost:" + port_http + \
-                                "/notebooks/" + notebook + \
+                                "/notebooks/" + args.notebook + \
                                 stdout_line[stdout_line.find("?token="):-1]
 
                         print("Copy/paste this URL into your browser " +
@@ -205,6 +217,11 @@ if __name__ == "__main__":
                         p.terminate()
                         wait_for_url = False
                         break
+            if args.detach:
+                print('Started container ' + container + ' in background.')
+                print('To stop it, use "docker stop ' + container + '".')
+                sys.exit(0)
+
 
             print("Press Ctrl-C to stop the server.")
 
