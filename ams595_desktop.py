@@ -132,7 +132,7 @@ def get_screen_resolution():
     return str(width) + 'x' + str(height)
 
 
-def handle_interrupt():
+def handle_interrupt(container):
     """Handle keyboard interrupt"""
     try:
         print("Press Ctrl-C again to stop the server: ")
@@ -265,10 +265,10 @@ if __name__ == "__main__":
                     sys.exit(-1)
                 time.sleep(1)
             except KeyboardInterrupt:
-                handle_interrupt()
+                handle_interrupt(container)
 
             continue
         except KeyboardInterrupt:
-            handle_interrupt()
+            handle_interrupt(container)
         except OSError:
             sys.exit(-1)

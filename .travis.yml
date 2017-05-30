@@ -1,11 +1,12 @@
 language: python
 
-services: docker
-
-addons:
-  chrome: stable
-
 before_install:
+  - sudo apt-get update
+
+  # Install the newer docker-engine
+  - sudo apt-get install -o Dpkg::Options::="--force-confold" --force-yes -y docker-engine
+
+  # Start up xvfb
   - "/sbin/start-stop-daemon --start --quiet --pidfile /tmp/custom_xvfb_99.pid
      --make-pidfile --background --exec /usr/bin/Xvfb -- :99 -ac -screen 0 1280x1024x16"
 
@@ -15,6 +16,7 @@ before_script:
   - sleep 3 # give xvfb some time to start
 
 script:
+  - docker --version
   - docker login -u "$DOCKER_USERNAME" -p "$DOCKER_USERPASS"
   # Build only if the commit range of a push contains Dockerfile or .travis.yml
   - '[[ "$TRAVIS_EVENT_TYPE" == "push" && -n "$TRAVIS_COMMIT_RANGE" &&
@@ -22,6 +24,7 @@ script:
             grep -e Dockerfile -e .travis.yml)" ]] ||
     (docker build --tag ams595/desktop:16.04 --tag ams595/desktop:latest . &&
      touch success)'
+  # Test startup scripts
   - './ams595_desktop.py -d && docker stop $(docker ps -q) &&
      ./ams595_jupyter.py -d && docker stop $(docker ps -q) &&
      ([[ ! -f success ]] || docker push ams595/desktop)'
