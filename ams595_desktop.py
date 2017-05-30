@@ -207,10 +207,10 @@ if __name__ == "__main__":
 
     print("Starting up docker image...")
     if subprocess.check_output(["docker", "--version"]). \
-            find(b"Docker version 17.") >= 0:
-        rmflag = "--rm"
-    else:
+            find(b"Docker version 1.") >= 0:
         rmflag = "-t"
+    else:
+        rmflag = "--rm"
 
     # Start the docker image in the background and pipe the stderr
     subprocess.call(["docker", "run", "-d", rmflag, "--name", container,
