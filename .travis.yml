@@ -4,13 +4,12 @@ sudo: required
 language: python
 
 before_install:
-  # Install the newer docker-engine
+  # Install latest version of docker-ce
+  - sudo apt-get update
+  - sudo apt-get install -y apt-transport-https ca-certificates curl software-properties-common
   - curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
   - sudo apt-get update
-  - sudo apt-get install apt-transport-https ca-certificates curl software-properties-common    
-  - sudo apt-get install -o Dpkg::Options::="--force-confold" --force-yes -y docker-engine
-  - sudo apt-get update
-  - sudo apt-get install docker-ce
+  - sudo apt-get install -y docker-ce
   # Start up xvfb
   - "/sbin/start-stop-daemon --start --quiet --pidfile /tmp/custom_xvfb_99.pid
      --make-pidfile --background --exec /usr/bin/Xvfb -- :99 -ac -screen 0 1280x1024x16"
