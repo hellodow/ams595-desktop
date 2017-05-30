@@ -43,6 +43,11 @@ def parse_args(description):
                         action='store_true',
                         default=False)
 
+    parser.add_argument('-r', '--reset',
+                        help='Reset configurations to default.',
+                        action='store_true',
+                        default=False)
+
     parser.add_argument('-d', '--detach',
                         help='Run in background and print container id',
                         action='store_true',
@@ -191,6 +196,10 @@ if __name__ == "__main__":
                                                args.image,
                                                "echo $DOCKER_HOME"]). \
             decode('utf-8')[:-1]
+
+    if args.reset:
+        subprocess.check_output(["docker", "volume", "rm", "-f",
+                                 "ams595_config"])
 
     volumes = ["-v", pwd + ":" + docker_home + "/shared",
                "-v", "ams595_config:" + docker_home + "/.config",
