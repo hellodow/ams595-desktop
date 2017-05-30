@@ -32,3 +32,4 @@ script:
      ./ams595_jupyter.py -d && docker stop $(docker ps -q) &&
      ([[ ! -f success ]] || docker push ams595/desktop)'
   - docker images
+  - travis_terminate $TRAVIS_TEST_RESULT
