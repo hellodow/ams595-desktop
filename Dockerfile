@@ -108,14 +108,16 @@ RUN pip3 install -U pip \
 ########################################################
 # Customization for user
 ########################################################
-ENV CDS_USER=ams595
+ARG CDS_USER=ams595
+ARG OLD_USER=$DOCKER_USER
+
 ENV DOCKER_USER=$CDS_USER \
     DOCKER_GROUP=$CDS_USER \
     DOCKER_HOME=/home/$CDS_USER \
     HOME=/home/$CDS_USER
 
-RUN usermod -l $DOCKER_USER -d $DOCKER_HOME -m x11vnc && \
-    groupmod -n $DOCKER_USER x11vnc && \
+RUN usermod -l $DOCKER_USER -d $DOCKER_HOME -m $OLD_USER && \
+    groupmod -n $DOCKER_USER $OLD_USER && \
     echo "$DOCKER_USER:docker" | chpasswd && \
     echo "$DOCKER_USER ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers && \
     echo "export OMP_NUM_THREADS=\$(nproc)" >> $DOCKER_HOME/.profile && \
