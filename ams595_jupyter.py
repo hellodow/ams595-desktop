@@ -49,7 +49,7 @@ def parse_args(description):
                         default=False)
 
     parser.add_argument('notebook', nargs='?',
-                         help='The notebook to open.', default="")
+                        help='The notebook to open.', default="")
 
     args = parser.parse_args()
 
@@ -221,7 +221,6 @@ if __name__ == "__main__":
                 print('Started container ' + container + ' in background.')
                 print('To stop it, use "docker stop ' + container + '".')
                 sys.exit(0)
-
 
             print("Press Ctrl-C to stop the server.")
 
