@@ -6,6 +6,8 @@ language: python
 before_install:
   # Install the newer docker-engine
   - curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
+  - sudo apt-get update
+  - sudo apt-get install apt-transport-https ca-certificates curl software-properties-common    
   - sudo apt-get install -o Dpkg::Options::="--force-confold" --force-yes -y docker-engine
   - sudo apt-get update
   - sudo apt-get install docker-ce
