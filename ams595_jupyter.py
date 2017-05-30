@@ -166,9 +166,14 @@ if __name__ == "__main__":
     volumes = ["-v", pwd + ":" + docker_home + "/shared"]
 
     print("Starting up docker image...")
+    if subprocess.check_output(["docker", "--version"]). \
+            find(b"Docker version 17.") >= 0:
+        rmflag = "--rm"
+    else:
+        rmflag = "-t"
 
     # Start the docker image in the background and pipe the stderr
-    subprocess.call(["docker", "run", "-d", "--rm", "--name", container,
+    subprocess.call(["docker", "run", "-d", rmflag, "--name", container,
                      "-p", "127.0.0.1:" + port_http + ":" + port_http,
                      "--env", "HOST_UID=" + uid] +
                     volumes +
