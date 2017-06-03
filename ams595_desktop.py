@@ -147,7 +147,7 @@ def get_screen_resolution():
 
         return str(width) + 'x' + str(height)
     except:
-        return "1440x900"
+        return ""
 
 
 def handle_interrupt(container):
@@ -238,8 +238,12 @@ if __name__ == "__main__":
         rmflag = "--rm"
 
     # Determine size of the desktop
-    if args.size:
+    if not args.size:
         size = get_screen_resolution()
+        if not size:
+            # Set default size and disable webbrowser
+            size = "1440x900"
+            args.no_browser = True
     else:
         size = args.size
 
