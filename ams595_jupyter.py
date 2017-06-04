@@ -13,7 +13,7 @@ import sys
 import subprocess
 import time
 
-GROUP = "ams595"
+APP = "ams595"
 
 
 def parse_args(description):
@@ -31,8 +31,8 @@ def parse_args(description):
 
     parser.add_argument('-i', '--image',
                         help='The Docker image to use. ' +
-                        'The default is ' + GROUP + '/desktop.',
-                        default=GROUP+"/desktop")
+                        'The default is ' + APP + '/desktop.',
+                        default=APP + "/desktop")
 
     parser.add_argument('-t', '--tag',
                         help='Tag of the image. The default is latest. ' +
@@ -87,7 +87,7 @@ def id_generator(size=6):
     import string
 
     chars = string.ascii_uppercase + string.digits
-    return "desktop_" + (''.join(random.choice(chars) for _ in range(size)))
+    return APP + "-" + (''.join(random.choice(chars) for _ in range(size)))
 
 
 def find_free_port(port, retries):
