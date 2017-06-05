@@ -4,7 +4,7 @@
 # Authors:
 # Xiangmin Jiao <xmjiao@gmail.com>
 
-FROM x11vnc/desktop:latest
+FROM x11vnc/octave-desktop:latest
 LABEL maintainer "Xiangmin Jiao <xmjiao@gmail.com>"
 
 USER root
@@ -12,19 +12,9 @@ WORKDIR /tmp
 
 # Install system packages
 RUN add-apt-repository ppa:webupd8team/atom && \
-    apt-add-repository ppa:octave/stable && \
     apt-get update && \
     apt-get install -y --no-install-recommends \
-        build-essential \
-        gfortran \
-        cmake \
-        bison \
-        flex \
         git \
-        bash-completion \
-        bsdtar \
-        rsync \
-        wget \
         gdb \
         ddd \
         valgrind \
@@ -39,77 +29,19 @@ RUN add-apt-repository ppa:webupd8team/atom && \
         meld \
         atom \
         clang-format && \
-    apt-get install -y --no-install-recommends \
-        octave \
-        gnuplot-x11 \
-        liboctave-dev \
-        libopenblas-base \
-        libatlas3-base \
-        pstoedit \
-        octave-info && \
-    pip install sympy && \
-    octave --eval 'pkg install -forge symbolic odepkg' && \
-    curl -L https://goo.gl/ExjLDP | bsdtar zxf - -C /usr/local --strip-components 2 && \
-    ln -s -f /usr/local/MATLAB/R2017a/bin/glnxa64/mlint /usr/local/bin && \
-    apt-get install -y --no-install-recommends \
-        python3-pip \
-        python3-dev \
-        pandoc \
-        ttf-dejavu && \
     apt-get clean && \
-    rm -rf /var/lib/apt/lists/*
-
-# Install SciPy, SymPy, Pandas, and Jupyter Notebook for Python3 and Octave
-# Customize Atom for Octave and MATLAB
-RUN pip3 install -U pip \
-         setuptools && \
-    pip3 install -U \
-         numpy \
-         matplotlib \
-         sympy \
-         scipy \
-         pandas \
-         nose \
-         sphinx \
-         autopep8 \
-         flake8 \
-         flufl.lock \
-         ply \
-         pytest \
-         six \
-         PyQt5 \
-         spyder \
-         urllib3 && \
-    pip3 install -U \
-         jupyter \
-         ipywidgets && \
-    jupyter nbextension install --py --system \
-         widgetsnbextension && \
-    jupyter nbextension enable --py --system \
-         widgetsnbextension && \
-    pip3 install -U \
-        jupyter_latex_envs==1.3.8.4 && \
-    jupyter nbextension install --py --system \
-        latex_envs && \
-    jupyter nbextension enable --py --system \
-        latex_envs && \
-    jupyter nbextension install --system \
-        https://bitbucket.org/ipre/calico/downloads/calico-spell-check-1.0.zip && \
-    jupyter nbextension install --system \
-        https://bitbucket.org/ipre/calico/downloads/calico-document-tools-1.0.zip && \
-    jupyter nbextension install --system \
-        https://bitbucket.org/ipre/calico/downloads/calico-cell-tools-1.0.zip && \
-    jupyter nbextension enable --system \
-        calico-spell-check && \
-    pip3 install -U octave_kernel && \
-    python3 -m octave_kernel.install && \
-    rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
+    pip install sympy && \
+    octave --eval 'pkg install -forge symbolic' && \
+    mkdir -p /usr/local/mlint && \
+    curl -L https://goo.gl/ExjLDP | bsdtar zxf - -C /usr/local/mlint --strip-components 4 && \
+    ln -s -f /usr/local/mlint/bin/glnxa64/mlint /usr/local/bin && \
+    rm -rf /var/lib/apt/lists/* /tmp/*
 
 ########################################################
 # Customization for user
 ########################################################
+USER $DOCKER_USER
 RUN echo 'export OMP_NUM_THREADS=$(nproc)' >> $DOCKER_HOME/.profile && \
-    touch $DOCKER_HOME/.log/jupyter.log && \
     apm install \
         language-cpp14 \
         language-matlab \
@@ -136,7 +68,7 @@ RUN echo 'export OMP_NUM_THREADS=$(nproc)' >> $DOCKER_HOME/.profile && \
         python-debugger \
         auto-detect-indentation \
         python-autopep8 \
-        clang-format && \
-    chown -R $DOCKER_USER:$DOCKER_GROUP $DOCKER_HOME
+        clang-format
 
 WORKDIR $DOCKER_HOME
+USER root
