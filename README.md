@@ -48,6 +48,11 @@ python ams595_desktop.py -p
 ```
 This will download and run the Docker image and then launch your default web browser to show the desktop environment. The `-p` option is optional, and it instructs the Python script to pull and update the image to the latest version.
 
+For additional command-line options, use the command
+```
+python ams595_desktop.py -h
+```
+
 ### Running the Docker Image as Jupyter-Notebook Server
 Besides using the Docker Image as an X-Windows desktop environment, you can also use it as a Jupyter-Notebook server with the
 default web browser on your computer. Simply replace `ams595_desktop.py` with `ams595_jupyter.py` in the preceding commands. That is, on Windows use the following commands in the PowerShell:
