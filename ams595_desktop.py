@@ -13,6 +13,8 @@ import sys
 import subprocess
 import time
 
+APP = "ams595"
+
 
 def parse_args(description):
     "Parse command-line arguments"
@@ -23,14 +25,14 @@ def parse_args(description):
     parser = argparse.ArgumentParser(description=description)
 
     parser.add_argument('-u', "--user",
-                        help='username used by the image. ' +
+                        help='The username used by the image. ' +
                         ' The default is to retrieve from image.',
                         default="")
 
     parser.add_argument('-i', '--image',
                         help='The Docker image to use. ' +
-                        'The default is ams595/desktop.',
-                        default="ams595/desktop")
+                        'The default is ' + APP + '/desktop.',
+                        default=APP + "/desktop")
 
     parser.add_argument('-t', '--tag',
                         help='Tag of the image. The default is latest. ' +
@@ -39,7 +41,7 @@ def parse_args(description):
 
     parser.add_argument('-p', '--pull',
                         help='Pull the latest Docker image. ' +
-                        ' The default is not to pull.',
+                        'The default is not to pull.',
                         action='store_true',
                         default=False)
 
@@ -64,7 +66,6 @@ def parse_args(description):
                         default=False)
 
     args = parser.parse_args()
-
     # Append tag to image if the image has no tag
     if args.image.find(':') < 0:
         args.image += ':' + args.tag
@@ -91,8 +92,8 @@ def id_generator(size=6):
     import random
     import string
 
-    chars = string.ascii_uppercase + string.digits
-    return "desktop_" + (''.join(random.choice(chars) for _ in range(size)))
+    chars = string.ascii_lowercase
+    return APP + "-" + (''.join(random.choice(chars) for _ in range(size)))
 
 
 def find_free_port(port, retries):
@@ -147,7 +148,7 @@ def get_screen_resolution():
 
         return str(width) + 'x' + str(height)
     except:
-        return "1440x900"
+        return ""
 
 
 def handle_interrupt(container):
@@ -221,14 +222,22 @@ if __name__ == "__main__":
                                                args.image,
                                                "echo $DOCKER_HOME"]). \
             decode('utf-8')[:-1]
+        user = docker_home[6:]
+
+    # Create .gitconfig if not exist
+    if not os.path.isfile(homedir + "/.gitconfig"):
+        with open(homedir + "/.gitconfig") as f:
+            pass
 
     if args.reset:
         subprocess.check_output(["docker", "volume", "rm", "-f",
-                                 "ams595_config"])
+                                 APP+"_config"])
 
     volumes = ["-v", pwd + ":" + docker_home + "/shared",
-               "-v", "ams595_config:" + docker_home + "/.config",
-               "-v", homedir + "/.ssh" + ":" + docker_home + "/.ssh"]
+               "-v", APP+"_config:" + docker_home + "/.config",
+               "-v", homedir + "/.ssh" + ":" + docker_home + "/.ssh",
+               "-v", homedir + "/.gitconfig" +
+               ":" + docker_home + "/.gitconfig"]
 
     print("Starting up docker image...")
     if subprocess.check_output(["docker", "--version"]). \
@@ -238,20 +247,26 @@ if __name__ == "__main__":
         rmflag = "--rm"
 
     # Determine size of the desktop
-    if args.size:
+    if not args.size:
         size = get_screen_resolution()
+        if not size:
+            # Set default size and disable webbrowser
+            size = "1440x900"
+            args.no_browser = True
     else:
         size = args.size
 
+    envs = ["--hostname", container,
+            "--env", "RESOLUT=" + size,
+            "--env", "HOST_UID=" + uid]
+
     # Start the docker image in the background and pipe the stderr
     subprocess.call(["docker", "run", "-d", rmflag, "--name", container,
-                     "-p", "127.0.0.1:" + port_vnc + ":6080",
-                     "--env", "RESOLUT=" + size,
-                     "--env", "HOST_UID=" + uid] +
-                    volumes +
+                     "-p", "127.0.0.1:" + port_vnc + ":6080"] +
+                    envs + volumes +
                     ["-w", docker_home + "/shared",
-                     args.image,
-                     "startvnc.sh >> " + docker_home + "/.log/vnc.log"])
+                     args.image, "startvnc.sh >> " +
+                     docker_home + "/.log/vnc.log"])
 
     wait_for_url = True
 

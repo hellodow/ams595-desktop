@@ -13,6 +13,8 @@ import sys
 import subprocess
 import time
 
+APP = "ams595"
+
 
 def parse_args(description):
     "Parse command-line arguments"
@@ -23,14 +25,14 @@ def parse_args(description):
     parser = argparse.ArgumentParser(description=description)
 
     parser.add_argument('-u', "--user",
-                        help='username used by the image. ' +
+                        help='The username used by the image. ' +
                         ' The default is to retrieve from image.',
                         default="")
 
     parser.add_argument('-i', '--image',
                         help='The Docker image to use. ' +
-                        'The default is ams595/desktop.',
-                        default="ams595/desktop")
+                        'The default is ' + APP + '/desktop.',
+                        default=APP + "/desktop")
 
     parser.add_argument('-t', '--tag',
                         help='Tag of the image. The default is latest. ' +
@@ -39,7 +41,7 @@ def parse_args(description):
 
     parser.add_argument('-p', '--pull',
                         help='Pull the latest Docker image. ' +
-                        ' The default is not to pull.',
+                        'The default is not to pull.',
                         action='store_true',
                         default=False)
 
@@ -84,8 +86,8 @@ def id_generator(size=6):
     import random
     import string
 
-    chars = string.ascii_uppercase + string.digits
-    return "desktop_" + (''.join(random.choice(chars) for _ in range(size)))
+    chars = string.ascii_lowercase
+    return APP + "-" + (''.join(random.choice(chars) for _ in range(size)))
 
 
 def find_free_port(port, retries):

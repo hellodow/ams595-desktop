@@ -48,6 +48,11 @@ python ams595_desktop.py -p
 ```
 This will download and run the Docker image and then launch your default web browser to show the desktop environment. The `-p` option is optional, and it instructs the Python script to pull and update the image to the latest version.
 
+For additional command-line options, use the command
+```
+python ams595_desktop.py -h
+```
+
 ### Running the Docker Image as Jupyter-Notebook Server
 Besides using the Docker Image as an X-Windows desktop environment, you can also use it as a Jupyter-Notebook server with the
 default web browser on your computer. Simply replace `ams595_desktop.py` with `ams595_jupyter.py` in the preceding commands. That is, on Windows use the following commands in the PowerShell:
@@ -76,13 +81,19 @@ in the directory where you ran the `curl` command above.
 To stop the Docker image, press Ctrl-C twice in the terminal (or Windows PowerShell on Windows) on your host computer where you started the Docker image, and close the tab for the desktop in your web browser.
 
 ## Entering Full-Screen Mode
-After starting the Docker image, you can change your web browser to full-screen mode so that the desktop environment would occupy the whole screen.
+After starting the Docker image, you can change your web browser to full-screen mode, so that the LXDE desktop environment would occupy the whole screen.
 
-On Windows, you are recommended to use `Microsoft Edge` for proper display in full-screen mode. You can toggle the full-screen mode by pressing Win+Shift+Enter (hold down the Windows and Shift keys, and press Enter). On Mac, you can use `Safari` or `Google Chrome`, for which you can toggle the full-screen mode by pressing Ctrl-Cmd-f (hold down Ctrl and Cmd keys and press f). On Linux, you are recommended to use `Firefox`, for which you can toggle the full-screen mode using the F11 (or Fn-F11) key.
+For the best cross-platform solution, we recommend *Google Chrome* or *Chromium browser*, which have the same user interface. On Windows or Linux, you can enter full-screen mode by selecting the menu `View --> "Full Screen"` Alternatively, open the Chrome menu (the three vertical dots at the top right) and select the square to the far right of the Zoom buttons (the "+" and "-" buttons). To exit the full-screen mode, press the `F11` key. On Mac, it behaves similarly except that the menu item is named `Enter Full Screen` instead of `Full Screen`, and the keyboard shortcut is `Ctrl-Cmd-f` instead of `F11`. You can also click on the green circle at the top-left corner of *Google Chrome* to enter and exit the full-screen mode. Note that in the full-screen mode, you need to disable `Always Show Toolbar in Full Screen` under the `View` menu of `Google Chrome`, and you can reveal the menu and the toolbar by sliding your mouse to the top of the display.
 
-If your default browser is different from the above, you can manually copy and paste the URL into these browsers.
+Alternatively, you can also use the "native" browsers on different platforms.
+- On Windows, you can use the native browser *Microsoft Edge*. Toggle on and off the full-screen mode by pressing Win+Shift+Enter (hold down the Windows and Shift keys and press Enter).
+- On Mac, you can use the native browser *Safari*, for which you can toggle the full-screen mode by clicking on the green circle at the top-left corner of *Safari* or selecting the `View --> "Enter Full Screen"` menu. To exit the full-screen mode, press `Ctrl-Cmd-f`, or slide your mouse to the top of the display to enable the menus.
+- On Linux, the default browser *Firefox* does not hide its address bar in its native full-screen mode. You are recommended to use *Google Chrome* or *Chromium browser* instead. However, you can use *Firefox* for a full-screen viewing mode by clicking on the `Fullscreen` button in the left sidebar of Docker desktop environment. However, this is not recommended for day-to-day use, because *Firefox* would exit this full-screen mode whenever you press `Esc`, which may happen quite often.
+
+If your Docker desktop environment started automatically in a non-recommended browser, you can copy and paste the URL into a recommended browser.
 
 ## Tips and Tricks
-1. When using the Docker image, only the files under `$HOME/shared` and `$HOME/.config` are persistent. The former maps to the working directory on your host where you started the docker image, and the latter contains the configuration files of the desktop environment. Any change to the files in other directories will be lost when you stop the Docker image. Make sure you save all your source codes in the `$HOME/shared`.
-2. By default, Docker uses two CPU cores and 2GB of memory for its images. This is sufficient for doing homework for this class. If you want to run large jobs, go to the `Advanced` tab in `Settings` (or `Preferences` for Mac) and increase the amount of memory dedicated to Docker.
-3. You can copy and paste between the host and the Docker image through the `Clipboard` box in the left toolbar, which is synced automatically with the clipboard of the Docker image. To copy from the Docker image to the host, first select the text in the Docker image, and then go to the `Clipboard` box to copy. To copy from host to the Docker image, first paste the text into the `Clipboard` box, and then paste the text in the Docker image.
+1. By default, Docker uses two CPU cores and 2GB of memory on Mac or Linux. If you want to run large jobs, go to the `Advanced` tab in `Settings` (or `Preferences` for Mac) and increase the amount of memory dedicated to Docker.
+2. When using the Docker image, the files under `$HOME/.config`, `$HOME/.ssh` and `$HOME/shared` are persistent. Any change to the files in other directories will be lost when you stop the Docker image. Make sure you save all your source codes in $HOME/shared`.
+3. The `$HOME/.ssh` directory in the Docker image maps to the `.ssh` directory on your host computer. This is particularly convenient for you to use your ssh-keys for authentications with git repositories on github.com or bitbucket.org. To use your ssh-keys, run the `ssh-add` in a terminal to add your keys to the ssh-agent.
+4. You can copy and paste between the host and the Docker image through the `Clipboard` box in the left toolbar, which is synced automatically with the clipboard of the Docker image. To copy from the Docker image to the host, first, select the text in the Docker image, and then go to the `Clipboard` box to copy. To copy from host to the Docker image, first, paste the text into the `Clipboard` box, and then paste the text in the Docker image.
