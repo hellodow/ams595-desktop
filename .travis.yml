@@ -5,8 +5,8 @@ language: python
 services: docker
 
 env:
-  - XVFB=1
-  - XVFB=0
+  - XVFB=1 VERSION=17F
+  - XVFB=0 VERSION=17F
 
 before_install:
   # Install latest version of docker-ce
@@ -28,7 +28,8 @@ script:
   - '[[ "$TRAVIS_EVENT_TYPE" == "push" && -n "$TRAVIS_COMMIT_RANGE" &&
         -z "$(git diff --name-only $TRAVIS_COMMIT_RANGE |
             grep -e Dockerfile -e .travis.yml)" ]] || [[ "$XVFB" != "1" ]] ||
-    (docker build --tag ams595/desktop:16.04 --tag ams595/desktop:latest . &&
+    (docker build --tag ams595/desktop:$VERSION
+                  --tag ams595/desktop:latest . &&
      docker push ams595/desktop &&
      touch success)'
   # Test startup scripts
