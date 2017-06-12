@@ -4,9 +4,9 @@ This Docker image provides the Ubuntu 16.04 environment with X Windows for the c
 The course covers programming using MATLAB/Octave, Python, and C++. This image runs the lightweight LXDE Windows Manager, and has Octave 4.0.2, Python 3.5.2 (with NumPy, SciPy, Pandas and Spyder),
 gcc 5.4.0, Jupyter Notebook with Octave and Python kernels, Atom, and ddd preinstalled. The X Windows will display in your web browser in full-screen mode. You can use this Docker image on 64-bit Linux, Mac or Windows. It allows you to use the same programming environment regardless which OS you are running on your laptop or desktop.
 
-![screenshot](https://raw.github.com/compdatasci/docker-desktop/ams595/screenshots/screenshot1.png)
+![screenshot](https://raw.github.com/compdatasci/ams595-desktop/master/screenshots/screenshot1.png)
 
-[![Build Status](https://travis-ci.org/compdatasci/docker-desktop.svg?branch=ams595)](https://travis-ci.org/compdatasci/docker-desktop) [![](https://images.microbadger.com/badges/image/ams595/desktop.svg)](https://microbadger.com/images/ams595/desktop)
+[![Build Status](https://travis-ci.org/compdatasci/ams595-desktop.svg?branch=master)](https://travis-ci.org/compdatasci/ams595-desktop) [![](https://images.microbadger.com/badges/image/ams595/desktop.svg)](https://microbadger.com/images/ams595/desktop)
 
 ## Preparation
 Before you start, you need to first install Python and Docker on your computer by following the steps below.
@@ -32,14 +32,14 @@ sudo adduser $USER docker
 Then, log out and log back in before you can use Docker.
 
 ## Running the Docker Image
-To run the Docker image, first download the script [`ams595_desktop.py`](https://raw.githubusercontent.com/compdatasci/docker-desktop/ams595/ams595_desktop.py)
+To run the Docker image, first download the script [`ams595_desktop.py`](https://raw.githubusercontent.com/compdatasci/ams595-desktop/master/ams595_desktop.py)
 and save it to the working directory where you will store your codes and data. You can download the script using command line: On Windows, start `Windows PowerShell`, use the `cd` command to change to the working directory where you will store your codes and data, and then run the following command:
 ```
-curl https://raw.githubusercontent.com/compdatasci/docker-desktop/ams595/ams595_desktop.py -outfile ams595_desktop.py
+curl https://raw.githubusercontent.com/compdatasci/ams595-desktop/master/ams595_desktop.py -outfile ams595_desktop.py
 ```
 On Linux or Mac, start a terminal, use the `cd` command to change to the working directory, and then run the following command:
 ```
-curl -s -O https://raw.githubusercontent.com/compdatasci/docker-desktop/ams595/ams595_desktop.py
+curl -s -O https://raw.githubusercontent.com/compdatasci/ams595-desktop/master/ams595_desktop.py
 ```
 
 After downloading the script, you can start the Docker image using the command
@@ -57,12 +57,12 @@ python ams595_desktop.py -h
 Besides using the Docker Image as an X-Windows desktop environment, you can also use it as a Jupyter-Notebook server with the
 default web browser on your computer. Simply replace `ams595_desktop.py` with `ams595_jupyter.py` in the preceding commands. That is, on Windows use the following commands in the PowerShell:
 ```
-curl https://raw.githubusercontent.com/compdatasci/docker-desktop/ams595/ams595_jupyter.py -outfile ams595_jupyter.py
+curl https://raw.githubusercontent.com/compdatasci/ams595-desktop/master/ams595_jupyter.py -outfile ams595_jupyter.py
 python ams595_jupyter.py -p
 ```
 and on Linux and Mac use the following commands in a terminal:
 ```
-curl -s -O https://raw.githubusercontent.com/compdatasci/docker-desktop/ams595/ams595_jupyter.py
+curl -s -O https://raw.githubusercontent.com/compdatasci/ams595-desktop/master/ams595_jupyter.py
 python ams595_jupyter.py -p
 ```
 
