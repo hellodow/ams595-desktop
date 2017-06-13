@@ -39,6 +39,11 @@ def parse_args(description):
                         'If the image already has a tag, its tag prevails.',
                         default="latest")
 
+    parser.add_argument('-m', '--matlab', nargs='?',
+                        help='Specify MATLAB version. Supported versions ' +
+                        'include R2016b or R2017a. The default is R2017a.',
+                        const="R2017a", default="")
+
     parser.add_argument('-p', '--pull',
                         help='Pull the latest Docker image. ' +
                         'The default is not to pull.',
@@ -151,6 +156,67 @@ def get_screen_resolution():
         return ""
 
 
+def download_matlab(version, user, image, volumes):
+    """Download MATLAB if not yet installed"""
+
+    installed = subprocess.check_output(["docker", "run", "--rm"] +
+                                        volumes +
+                                        [image,
+                                         'if [ -e "/usr/local/MATLAB/' +
+                                         version + '/installed" ]; ' +
+                                         'then echo "installed"; fi'])
+
+    if installed.find(b"installed") < 0:
+        if args.no_browser:
+            print('Browser is required to install MATLAB.')
+            sys.exit(-1)
+
+        # Downloading software using Google authentication
+        try:
+            port_http = find_free_port(8080, 50)
+            print('Authenticating for MATLAB intallation...')
+            p = subprocess.Popen(["docker", "run", "--rm", '-ti'] + volumes +
+                                 ['-p', "127.0.0.1:" + str(port_http) +
+                                     ":8080", image, "gd-auth -n"],
+                                 stdout=subprocess.PIPE,
+                                 universal_newlines=True)
+
+            # Monitor the stdout to extract the URL
+            for line in iter(p.stdout.readline, ""):
+                ind = line.find("https://accounts.google.com")
+                if ind >= 0:
+                    # Open browser if found URL
+                    print('Log in with your authorized Google account in the ' +
+                          'webbrowser to get verification code.')
+                    webbrowser.open(line[ind:-1])
+                    sys.stdout.flush()
+                    sys.stdout.write('\r\nEnter verification code: ')
+                    sys.stdout.flush()
+                    break
+
+            if p.wait() != 0:
+                raise BaseException
+
+            # Downloading MATLAB software
+            print("\nDownloading MATLAB...")
+            cmd = "gd-get -p 0ByTwsK5_Tl_PcFpQRHZHcTM1VW8 " + version + \
+                "_glnx64_nohelp.tgz | sudo tar zxf - -C /usr/local --delay-directory-restore " + \
+                "--warning=no-unknown-keyword --strip-components 2 && " + \
+                "sudo chown -R " + user + ":" + user + \
+                " /usr/local/MATLAB/" + version + "/licenses && " + \
+                "sudo touch /usr/local/MATLAB/" + version + "/installed"
+
+            err = subprocess.call(["docker", "run", "--rm", "-ti"] +
+                                  volumes + ["-w", "/tmp/", image, cmd])
+        except BaseException:
+            err = -1
+
+        if err:
+            print("Failed to download MATLAB. Please rerun " + sys.argv[0] +
+                  " with the -r option and use a valid Google account.")
+            sys.exit(err)
+
+
 def handle_interrupt(container):
     """Handle keyboard interrupt"""
     try:
@@ -182,6 +248,10 @@ if __name__ == "__main__":
             print('Then, log out and log back in before you can use Docker.')
             sys.exit(-1)
         uid = str(os.getuid())
+        if uid == '0':
+            print('You are running as root. This is not safe. ' +
+                  'Please run as a standard user.')
+            sys.exit(-1)
     else:
         uid = ""
 
@@ -216,6 +286,7 @@ if __name__ == "__main__":
         os.mkdir(homedir + "/.ssh")
 
     if args.user:
+        user = args.user
         docker_home = "/home/" + args.user
     else:
         docker_home = subprocess.check_output(["docker", "run", "--rm",
@@ -231,13 +302,18 @@ if __name__ == "__main__":
 
     if args.reset:
         subprocess.check_output(["docker", "volume", "rm", "-f",
-                                 APP+"_config"])
+                                 APP + "_config"])
 
     volumes = ["-v", pwd + ":" + docker_home + "/shared",
-               "-v", APP+"_config:" + docker_home + "/.config",
+               "-v", APP + "_config:" + docker_home + "/.config",
                "-v", homedir + "/.ssh" + ":" + docker_home + "/.ssh",
                "-v", homedir + "/.gitconfig" +
                ":" + docker_home + "/.gitconfig"]
+    if args.matlab:
+        volumes += ["-v", "matlab_bin:/usr/local/MATLAB/",
+                    "-v", "matlab_config:" + docker_home + "/.matlab"]
+
+        download_matlab(args.matlab, user, args.image, volumes)
 
     print("Starting up docker image...")
     if subprocess.check_output(["docker", "--version"]). \
@@ -259,6 +335,8 @@ if __name__ == "__main__":
     envs = ["--hostname", container,
             "--env", "RESOLUT=" + size,
             "--env", "HOST_UID=" + uid]
+    if args.matlab:
+        envs += ["--env", "MATLAB_VERSION=" + args.matlab]
 
     # Start the docker image in the background and pipe the stderr
     subprocess.call(["docker", "run", "-d", rmflag, "--name", container,
