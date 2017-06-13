@@ -68,7 +68,8 @@ RUN echo 'export OMP_NUM_THREADS=$(nproc)' >> $DOCKER_HOME/.profile && \
         python-debugger \
         auto-detect-indentation \
         python-autopep8 \
-        clang-format
+        clang-format && \
+    rm -rf /tmp/*
 
 WORKDIR $DOCKER_HOME
 USER root
