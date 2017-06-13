@@ -43,8 +43,13 @@ RUN add-apt-repository ppa:webupd8team/atom && \
 ########################################################
 # Customization for user
 ########################################################
+
+ADD image/etc /etc
+ADD image/bin $DOCKER_HOME/bin
+
 USER $DOCKER_USER
-RUN echo 'export OMP_NUM_THREADS=$(nproc)' >> $DOCKER_HOME/.profile && \
+RUN echo "@start_matlab" >> $DOCKER_HOME/.config/lxsession/LXDE/autostart && \
+    echo 'export OMP_NUM_THREADS=$(nproc)' >> $DOCKER_HOME/.profile && \
     apm install \
         language-cpp14 \
         language-matlab \
