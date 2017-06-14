@@ -26,7 +26,7 @@ def parse_args(description):
 
     parser.add_argument('-u', "--user",
                         help='The username used by the image. ' +
-                        ' The default is to retrieve from image.',
+                        'The default is ubuntu.',
                         default="")
 
     parser.add_argument('-i', '--image',
@@ -167,17 +167,11 @@ def download_matlab(version, user, image, volumes):
                                          'then echo "installed"; fi'])
 
     if installed.find(b"installed") < 0:
-        if args.no_browser:
-            print('Browser is required to install MATLAB.')
-            sys.exit(-1)
-
         # Downloading software using Google authentication
         try:
-            port_http = find_free_port(8080, 50)
             print('Authenticating for MATLAB intallation...')
             p = subprocess.Popen(["docker", "run", "--rm", '-ti'] + volumes +
-                                 ['-p', "127.0.0.1:" + str(port_http) +
-                                     ":8080", image, "gd-auth -n"],
+                                 [image, "gd-auth -n"],
                                  stdout=subprocess.PIPE,
                                  universal_newlines=True)
 
@@ -188,8 +182,12 @@ def download_matlab(version, user, image, volumes):
                     # Open browser if found URL
                     print('Log in with your authorized Google account in the ' +
                           'webbrowser to get verification code.')
-                    webbrowser.open(line[ind:-1])
-                    sys.stdout.flush()
+                    if args.no_browser:
+                        webbrowser.open(line[ind:-1])
+                    else:
+                        print('Open browswe at URL:')
+                        print(line[ind:-1])
+
                     sys.stdout.write('\r\nEnter verification code: ')
                     sys.stdout.flush()
                     break
