@@ -52,7 +52,7 @@ You can start the Docker image with `MATLAB` using the command
 ```
 python ams595_desktop.py -p -m
 ```
-where the `-m` option would request installation of MATLAB. It will prompt you to authenticate using your Google account. After the desktop launches, you will also be asked to activate MATLAB using your MathWorks account. The authentication and activation need to be done only once.
+where the `-m` option would request installation of MATLAB. It will prompt you to authenticate using your Google account to download MATLAB. After the download completes, MATLAB will start automatically inside the desktop, and you may be asked to activate MATLAB using your MathWorks account. The authentication and activation need to be done only once.
 
 For additional command-line options, use the command
 ```
