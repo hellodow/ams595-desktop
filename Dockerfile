@@ -46,6 +46,8 @@ RUN add-apt-repository ppa:webupd8team/atom && \
 
 ADD image/etc /etc
 ADD image/bin $DOCKER_HOME/bin
+ADD config/atom $DOCKER_HOME/.config/atom
+RUN chown -R $DOCKER_USER:$DOCKER_GROUP $DOCKER_HOME/bin $DOCKER_HOME/.config
 
 USER $DOCKER_USER
 RUN echo "@start_matlab" >> $DOCKER_HOME/.config/lxsession/LXDE/autostart && \
