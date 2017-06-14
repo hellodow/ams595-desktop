@@ -78,7 +78,7 @@ RUN echo "@start_matlab" >> $DOCKER_HOME/.config/lxsession/LXDE/autostart && \
         python-autopep8 \
         clang-format && \
     rm -rf /tmp/* && \
-    echo "PATH=/usr/local/gdkit/bin:$PATH" >> $DOCKER_HOME/.profile
+    echo "PATH=$DOCKER_HOME/bin:/usr/local/gdkit/bin:$PATH" >> $DOCKER_HOME/.profile
 
 
 WORKDIR $DOCKER_HOME
