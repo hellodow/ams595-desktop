@@ -181,7 +181,7 @@ def download_matlab(version, user, image, volumes):
                     # Open browser if found URL
                     print('Log in with your authorized Google account in the ' +
                           'webbrowser to get verification code.')
-                    if args.no_browser:
+                    if not args.no_browser:
                         webbrowser.open(line[ind:-1])
                     else:
                         print('Open browswe at URL:')
