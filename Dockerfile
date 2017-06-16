@@ -10,7 +10,7 @@ LABEL maintainer "Xiangmin Jiao <xmjiao@gmail.com>"
 USER root
 WORKDIR /tmp
 
-# Install system packages and gdutil
+# Install system packages
 RUN add-apt-repository ppa:webupd8team/atom && \
     apt-get update && \
     apt-get install -y --no-install-recommends \
@@ -35,9 +35,6 @@ RUN add-apt-repository ppa:webupd8team/atom && \
     mkdir -p /usr/local/mlint && \
     curl -L https://goo.gl/ExjLDP | bsdtar zxf - -C /usr/local/mlint --strip-components 4 && \
     ln -s -f /usr/local/mlint/bin/glnxa64/mlint /usr/local/bin && \
-    git clone --depth 1 https://github.com/hpdata/gdutil /usr/local/gdutil && \
-    pip3 install -r /usr/local/gdutil/requirements.txt && \
-    ln -s -f /usr/local/gdutil/gd_get_pub.py /usr/local/bin/gd-get-pub && \
     rm -rf /var/lib/apt/lists/* /tmp/*
 
 ########################################################
@@ -47,7 +44,14 @@ RUN add-apt-repository ppa:webupd8team/atom && \
 ADD image/etc /etc
 ADD image/bin $DOCKER_HOME/bin
 ADD config/atom $DOCKER_HOME/.config/atom
-RUN chown -R $DOCKER_USER:$DOCKER_GROUP $DOCKER_HOME/bin $DOCKER_HOME/.config
+ADD config/matlab $DOCKER_HOME/.matlab/R2017a
+ADD config/matlab $DOCKER_HOME/.matlab/R2016b
+
+# Install gdutil and set permission
+RUN git clone --depth 1 https://github.com/hpdata/gdutil /usr/local/gdutil && \
+    pip3 install -r /usr/local/gdutil/requirements.txt && \
+    ln -s -f /usr/local/gdutil/gd_get_pub.py /usr/local/bin/gd-get-pub && \
+    chown -R $DOCKER_USER:$DOCKER_GROUP $DOCKER_HOME
 
 USER $DOCKER_USER
 RUN echo "@start_matlab" >> $DOCKER_HOME/.config/lxsession/LXDE/autostart && \

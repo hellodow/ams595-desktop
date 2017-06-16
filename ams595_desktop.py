@@ -205,6 +205,19 @@ def download_matlab(version, user, image, volumes):
 
             err = subprocess.call(["docker", "run", "--rm", "-ti"] +
                                   volumes + ["-w", "/tmp/", image, cmd])
+
+            # Downloading MATLAB documentation in the background
+            cmd = "gd-get -p 0ByTwsK5_Tl_PcFpQRHZHcTM1VW8 " + version + \
+                "_glnx64_help.tgz | sudo tar zxf - -C /usr/local --delay-directory-restore " + \
+                "--warning=no-unknown-keyword --strip-components 2"
+
+            if subprocess.check_output(["docker", "--version"]). \
+                    find(b"Docker version 1.") >= 0:
+                rmflag = "-t"
+            else:
+                rmflag = "--rm"
+            subprocess.call(["docker", "run", rmflag, "-d"] +
+                            volumes + ["-w", "/tmp/", image, cmd])
         except BaseException:
             err = -1
 
