@@ -81,6 +81,8 @@ RUN echo "@start_matlab" >> $DOCKER_HOME/.config/lxsession/LXDE/autostart && \
         auto-detect-indentation \
         python-autopep8 \
         clang-format && \
+    ln -s -f $DOCKER_HOME/.config/atom/* $DOCKER_HOME/.atom && \
+    ln -s -f $DOCKER_HOME/.config/matlab $DOCKER_HOME/.matlab && \
     rm -rf /tmp/* && \
     echo "PATH=$DOCKER_HOME/bin:/usr/local/gdutil/bin:$PATH" >> $DOCKER_HOME/.profile
 
