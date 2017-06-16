@@ -43,9 +43,7 @@ RUN add-apt-repository ppa:webupd8team/atom && \
 
 ADD image/etc /etc
 ADD image/bin $DOCKER_HOME/bin
-ADD config/atom $DOCKER_HOME/.config/atom
-ADD config/matlab $DOCKER_HOME/.matlab/R2017a
-ADD config/matlab $DOCKER_HOME/.matlab/R2016b
+ADD image/config $DOCKER_HOME/.config
 
 # Install gdutil and set permission
 RUN git clone --depth 1 https://github.com/hpdata/gdutil /usr/local/gdutil && \
