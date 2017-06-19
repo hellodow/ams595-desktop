@@ -52,6 +52,7 @@ RUN git clone --depth 1 https://github.com/hpdata/gdutil /usr/local/gdutil && \
     chown -R $DOCKER_USER:$DOCKER_GROUP $DOCKER_HOME
 
 USER $DOCKER_USER
+ENV  EDITOR=atom
 RUN echo "@start_matlab" >> $DOCKER_HOME/.config/lxsession/LXDE/autostart && \
     echo 'export OMP_NUM_THREADS=$(nproc)' >> $DOCKER_HOME/.profile && \
     apm install \
