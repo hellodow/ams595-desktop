@@ -174,47 +174,30 @@ def download_matlab(version, user, image, volumes):
                                          version + '/installed" ]; ' +
                                          'then echo "installed"; fi'])
 
-    if installed.find(b"installed") < 0:
+    if True or installed.find(b"installed") < 0:
+        import tempfile
+        if sys.version_info.major > 2:
+            import urllib.request as urllib
+        else:
+            import urllib
+            import shutil
+
+        tmpdir = tempfile.mkdtemp()
+        gd_auth = tmpdir + '/gd_auth.py'
+
+        response = urllib.urlopen(
+            'https://raw.githubusercontent.com/hpdata/gdutil/master/gd_auth.py')
+        with open(gd_auth, 'wb') as f:
+            f.write(response.read())
+
         # Downloading software using Google authentication
         try:
             print('Authenticating for MATLAB intallation...')
-            for i in range(3):
-                p = subprocess.Popen(["docker", "run", "--rm", '-i'] + volumes +
-                                     [image, "gd-auth -n"],
-                                     stdin=subprocess.PIPE,
-                                     stdout=subprocess.PIPE,
-                                     stderr=subprocess.PIPE,
-                                     universal_newlines=True)
-
-                # Monitor the stdout to extract the URL
-                for line in iter(p.stdout.readline, ""):
-                    ind = line.find("https://accounts.google.com")
-                    if ind >= 0:
-                        # Open browser if found URL
-                        print('Log in with your authorized Google account in the ' +
-                              'webbrowser to get verification code.')
-                        if not args.no_browser:
-                            webbrowser.open(line[ind:-1])
-                        else:
-                            print('Open browswe at URL:')
-                            print(line[ind:-1])
-
-                        code = input('Enter verification code: ')
-                        p.stdin.write(code + '\n')
-                        p.communicate()
-                        break
-
-                if p.wait() == 0:
-                    break
-                elif i < 2:
-                    sys.stderr.write('Authentication failed. ' +
-                                     'Please try again or press Ctrl-C to stop.\n')
-                else:
-                    raise BaseException
+            subprocess.call([sys.executable, gd_auth, '-c', '.'])
 
             # Downloading MATLAB software
             print("\nDownloading MATLAB...")
-            cmd = "gd-get -p 0ByTwsK5_Tl_PcFpQRHZHcTM1VW8 -o - " + version + \
+            cmd = "gd-get -c . -p 0ByTwsK5_Tl_PcFpQRHZHcTM1VW8 -o - " + version + \
                 "_glnx64_nohelp.tgz | sudo tar zxf - -C /usr/local --delay-directory-restore " + \
                 "--warning=no-unknown-keyword --strip-components 2 && " + \
                 "sudo chown -R " + user + ":" + user + \
@@ -222,10 +205,11 @@ def download_matlab(version, user, image, volumes):
                 "sudo touch /usr/local/MATLAB/" + version + "/installed"
 
             err = subprocess.call(["docker", "run", "--rm"] +
-                                  volumes + ["-w", "/tmp/", image, cmd])
+                                  volumes +
+                                  ["-w", '/home/' + user + '/shared', image, cmd])
 
             # Downloading MATLAB documentation in the background
-            cmd = "gd-get -p 0ByTwsK5_Tl_PcFpQRHZHcTM1VW8 -o - " + version + \
+            cmd = "gd-get -c . -p 0ByTwsK5_Tl_PcFpQRHZHcTM1VW8 -o - " + version + \
                 "_glnx64_help.tgz | sudo tar zxf - -C /usr/local --delay-directory-restore " + \
                 "--warning=no-unknown-keyword --strip-components 2"
 
@@ -234,10 +218,14 @@ def download_matlab(version, user, image, volumes):
                 rmflag = "-t"
             else:
                 rmflag = "--rm"
+
             subprocess.call(["docker", "run", rmflag, "-d"] +
-                            volumes + ["-w", "/tmp/", image, cmd])
+                            volumes +
+                            ["-w", '/home/' + user + '/shared', image, cmd])
         except BaseException:
             err = -1
+        finally:
+            shutil.rmtree(tmpdir)
 
         if err:
             print("Failed to download MATLAB. Please rerun " + sys.argv[0] +
