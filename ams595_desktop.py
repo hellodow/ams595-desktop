@@ -174,13 +174,13 @@ def download_matlab(version, user, image, volumes):
                                          version + '/installed" ]; ' +
                                          'then echo "installed"; fi'])
 
-    if True or installed.find(b"installed") < 0:
+    if installed.find(b"installed") < 0:
         import tempfile
+        import shutil
         if sys.version_info.major > 2:
             import urllib.request as urllib
         else:
             import urllib
-            import shutil
 
         tmpdir = tempfile.mkdtemp()
         gd_auth = tmpdir + '/gd_auth.py'
@@ -208,20 +208,22 @@ def download_matlab(version, user, image, volumes):
                                   volumes +
                                   ["-w", '/home/' + user + '/shared', image, cmd])
 
-            # Downloading MATLAB documentation in the background
-            cmd = "gd-get -c . -p 0ByTwsK5_Tl_PcFpQRHZHcTM1VW8 -o - " + version + \
-                "_glnx64_help.tgz | sudo tar zxf - -C /usr/local --delay-directory-restore " + \
-                "--warning=no-unknown-keyword --strip-components 2"
+            if not err:
+                # Downloading MATLAB documentation in the background
+                cmd = "gd-get -c . -p 0ByTwsK5_Tl_PcFpQRHZHcTM1VW8 -o - " + \
+                    version + "_glnx64_help.tgz | " + \
+                    "sudo tar zxf - -C /usr/local --delay-directory-restore " + \
+                    "--warning=no-unknown-keyword --strip-components 2"
 
-            if subprocess.check_output(["docker", "--version"]). \
-                    find(b"Docker version 1.") >= 0:
-                rmflag = "-t"
-            else:
-                rmflag = "--rm"
+                if subprocess.check_output(["docker", "--version"]). \
+                        find(b"Docker version 1.") >= 0:
+                    rmflag = "-t"
+                else:
+                    rmflag = "--rm"
 
-            subprocess.call(["docker", "run", rmflag, "-d"] +
-                            volumes +
-                            ["-w", '/home/' + user + '/shared', image, cmd])
+                subprocess.call(["docker", "run", rmflag, "-d"] +
+                                volumes +
+                                ["-w", '/home/' + user + '/shared', image, cmd])
         except BaseException:
             err = -1
         finally:
