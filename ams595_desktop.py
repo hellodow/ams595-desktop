@@ -167,12 +167,17 @@ def get_screen_resolution():
 def download_matlab(version, user, image, volumes):
     """Download MATLAB if not yet installed"""
 
-    installed = subprocess.check_output(["docker", "run", "--rm"] +
-                                        volumes +
-                                        [image,
-                                         'if [ -e "/usr/local/MATLAB/' +
-                                         version + '/installed" ]; ' +
-                                         'then echo "installed"; fi'])
+    try:
+        installed = subprocess.check_output(["docker", "run", "--rm"] +
+                                            volumes +
+                                            [image,
+                                             'if [ -e "/usr/local/MATLAB/' +
+                                             version + '/installed" ]; ' +
+                                             'then echo "installed"; fi'])
+    except subprocess.CalledProcessError:
+        sys.stderr.write(
+            "Please make sure the drive is shared in Docker's settings.\n")
+        sys.exit(-1)
 
     if installed.find(b"installed") < 0:
         import tempfile
