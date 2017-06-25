@@ -34,6 +34,7 @@ RUN add-apt-repository ppa:webupd8team/atom && \
     pip3 install -U \
         numpy \
         scipy \
+        sympy \
         pandas \
         matplotlib \
         autopep8 \
