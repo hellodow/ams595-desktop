@@ -31,6 +31,11 @@ RUN add-apt-repository ppa:webupd8team/atom && \
         clang-format && \
     apt-get clean && \
     pip install sympy && \
+    pip3 install -U \
+         autopep8 \
+         flake8 \
+         PyQt5 \
+         spyder && \
     octave --eval 'pkg install -forge symbolic' && \
     mkdir -p /usr/local/mlint && \
     curl -L https://goo.gl/ExjLDP | bsdtar zxf - -C /usr/local/mlint --strip-components 4 && \
