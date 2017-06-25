@@ -20,6 +20,7 @@ RUN add-apt-repository ppa:webupd8team/atom && \
         valgrind \
         electric-fence \
         ccache \
+        libnss3 \
         \
         liblapack-dev \
         libmpich-dev \
