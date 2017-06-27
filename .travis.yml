@@ -5,8 +5,11 @@ language: python
 services: docker
 
 env:
-  - XVFB=1 VERSION=17F
-  - XVFB=0 VERSION=17F
+  global:
+    - BASE=compdatasci/octave-desktop:latest
+  matrix:
+    - XVFB=1 VERSION=17F
+    - XVFB=0 VERSION=17F
 
 before_install:
   # Start up xvfb
@@ -15,12 +18,14 @@ before_install:
 
 before_script:
   - '[[ "$XVFB" != "1" ]] || export DISPLAY=:99.0 && sh -e /etc/init.d/xvfb start'
-
-script:
   - docker --version
   - docker login -u "$DOCKER_USERNAME" -p "$DOCKER_USERPASS"
+  - docker pull $BASE
+
+script:
   # Build only if the commit range of a push contains Dockerfile or .travis.yml
   - '[[ "$TRAVIS_EVENT_TYPE" == "push" && -n "$TRAVIS_COMMIT_RANGE" &&
+        -n $(git log --since $(docker inspect $BASE | grep Created | perl -e "s/.+\"([\d-:T]+).+$/\$1/g" -p)) &&
         -z "$(git diff --name-only $TRAVIS_COMMIT_RANGE |
             grep -e Dockerfile -e .travis.yml)" ]] || [[ "$XVFB" != "1" ]] ||
     (docker build --tag ams595/desktop:$VERSION
