@@ -1,9 +1,11 @@
 This is the Docker image for AMS 595: Fundamental of Computing at Stony Brook
-University. This image is based on Ubuntu 16.04. It has Octave, SciPy, Spyder,
-Jupyter Notebook, g++-5.4, Atom, LAPACK, ddd, valgrind, and mpich preinstalled.
-You can also use MATLAB if you started the ams595_desktop.py script with the
-"-m" option. Please save your code and data into ~/shared or ~/project
-directories. The former maps to the current work directory on your computer.
-The latter maps to the Docker data volume named ams595_project.
+University. This image is based on Ubuntu 16.04. It has Octave 4.2.1, SciPy and
+Spyder for Python 3, Jupyter Notebook for Python 3 and Octave, g++-5.4, Atom,
+LAPACK, ddd, and valgrind preinstalled. You can also use MATLAB if you started
+the Docker container using ams595_desktop.py with the "-m" option.
 
-Enjoy programming!
+Please save your code and data into ~/shared or ~/project directories. The
+former maps to the current work directory on your computer. The latter maps
+to the Docker data volume named ams595_project.
+
+Happy programming!

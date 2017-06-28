@@ -23,9 +23,7 @@ RUN add-apt-repository ppa:webupd8team/atom && \
         libnss3 \
         \
         liblapack-dev \
-        libmpich-dev \
         libopenblas-dev \
-        mpich \
         \
         meld \
         atom \
