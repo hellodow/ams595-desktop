@@ -54,7 +54,7 @@ RUN add-apt-repository ppa:webupd8team/atom && \
 ADD image/etc /etc
 ADD image/bin $DOCKER_HOME/bin
 ADD image/config $DOCKER_HOME/.config
-ADD WELCOME $DOCKER_HOME/WELCOME
+COPY WELCOME $DOCKER_HOME/WELCOME
 
 # Install gdutil and set permission
 RUN git clone --depth 1 https://github.com/hpdata/gdutil /usr/local/gdutil && \
