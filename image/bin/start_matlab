@@ -6,7 +6,7 @@ then
 fi
 
 # Download MATLAB
-xterm -e $HOME/bin/download_matlab
+xterm -e download_matlab
 
 # Activate MATLAB
 mkdir -p $HOME/.matlab/$MATLAB_VERSION

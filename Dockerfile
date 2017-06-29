@@ -52,7 +52,7 @@ RUN add-apt-repository ppa:webupd8team/atom && \
 ########################################################
 
 ADD image/etc /etc
-ADD image/bin $DOCKER_HOME/bin
+ADD image/bin /usr/local/bin
 ADD image/config $DOCKER_HOME/.config
 COPY WELCOME $DOCKER_HOME/WELCOME
 
@@ -60,7 +60,7 @@ COPY WELCOME $DOCKER_HOME/WELCOME
 RUN git clone --depth 1 https://github.com/hpdata/gdutil /usr/local/gdutil && \
     pip2 install -r /usr/local/gdutil/requirements.txt && \
     pip3 install -r /usr/local/gdutil/requirements.txt && \
-    ln -s -f /usr/local/gdutil/gd_get_pub.py /usr/local/bin/gd-get-pub && \
+    ln -s -f /usr/local/gdutil/bin/* /usr/local/bin/ && \
     chown -R $DOCKER_USER:$DOCKER_GROUP $DOCKER_HOME
 
 USER $DOCKER_USER
