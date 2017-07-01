@@ -6,6 +6,7 @@ services: docker
 env:
   global:
     - BASE=compdatasci/octave-desktop:latest
+    - VERSION=17F
 
 before_script:
   - docker --version
