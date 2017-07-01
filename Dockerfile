@@ -45,6 +45,8 @@ RUN add-apt-repository ppa:webupd8team/atom && \
     mkdir -p /usr/local/mlint && \
     curl -L https://goo.gl/ExjLDP | bsdtar zxf - -C /usr/local/mlint --strip-components 4 && \
     ln -s -f /usr/local/mlint/bin/glnxa64/mlint /usr/local/bin && \
+    echo "move_to_config atom" >> /usr/local/bin/init_vnc && \
+    echo "move_to_config matlab" >> /usr/local/bin/init_vnc && \
     rm -rf /var/lib/apt/lists/* /tmp/*
 
 ########################################################
@@ -53,8 +55,7 @@ RUN add-apt-repository ppa:webupd8team/atom && \
 
 ADD image/etc /etc
 ADD image/bin /usr/local/bin
-ADD image/config $DOCKER_HOME/.config
-COPY WELCOME $DOCKER_HOME/WELCOME
+ADD image/home $DOCKER_HOME
 
 # Install gdutil and set permission
 RUN git clone --depth 1 https://github.com/hpdata/gdutil /usr/local/gdutil && \
@@ -94,8 +95,6 @@ RUN echo "@start_matlab" >> $DOCKER_HOME/.config/lxsession/LXDE/autostart && \
         auto-detect-indentation \
         python-autopep8 \
         clang-format && \
-    ln -s -f $DOCKER_HOME/.config/atom/* $DOCKER_HOME/.atom && \
-    ln -s -f $DOCKER_HOME/.config/matlab $DOCKER_HOME/.matlab && \
     rm -rf /tmp/* && \
     echo "PATH=$DOCKER_HOME/bin:/usr/local/gdutil/bin:$PATH" >> $DOCKER_HOME/.profile
 
