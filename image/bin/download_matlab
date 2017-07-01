@@ -8,8 +8,11 @@ set -e
 MATLAB_ROOT=/usr/local/MATLAB/$MATLAB_VERSION
 
 if [ ! -f $MATLAB_ROOT/installed ]; then
-    echo 'To use MATLAB, please authenticate using your Stony Brook Google account:'
-    gd-auth
+    if [ ! -f $HOME/.config/gdutil/mycred.txt ]; then
+        echo 'To download MATLAB, please authenticate using your authorized Google account:'
+        read -p "Press enter to continue"
+        gd-auth
+    fi
 
     if [ -f $HOME/.config/gdutil/mycred.txt ]; then
         # Downloading MATLAB software
