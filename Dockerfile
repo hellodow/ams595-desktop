@@ -46,7 +46,8 @@ RUN add-apt-repository ppa:webupd8team/atom && \
     curl -L https://goo.gl/ExjLDP | bsdtar zxf - -C /usr/local/mlint --strip-components 4 && \
     ln -s -f /usr/local/mlint/bin/glnxa64/mlint /usr/local/bin && \
     echo "move_to_config atom" >> /usr/local/bin/init_vnc && \
-    echo "move_to_config matlab" >> /usr/local/bin/init_vnc && \
+    echo "move_to_config matlab/R2016b" >> /usr/local/bin/init_vnc && \
+    echo "move_to_config matlab/R2017a" >> /usr/local/bin/init_vnc && \
     rm -rf /var/lib/apt/lists/* /tmp/*
 
 ########################################################
