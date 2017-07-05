@@ -83,7 +83,6 @@ RUN echo "@start_matlab" >> $DOCKER_HOME/.config/lxsession/LXDE/autostart && \
         linter-gcc \
         linter-gfortran \
         linter-flake8 \
-        linter-matlab \
         dbg \
         output-panel \
         dbg-gdb \
