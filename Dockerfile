@@ -17,21 +17,15 @@ RUN add-apt-repository ppa:webupd8team/atom && \
         git \
         gdb \
         ddd \
-        valgrind \
-        electric-fence \
-        kcachegrind \
         ccache \
         libnss3 \
         nano \
-        emacs \
-        vim-gtk3 \
         \
         liblapack-dev \
         libopenblas-dev \
         \
         meld \
         atom \
-        clang \
         clang-format && \
     apt-get clean && \
     pip3 install -U \
