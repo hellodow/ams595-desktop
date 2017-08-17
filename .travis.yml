@@ -22,7 +22,4 @@ script:
     (docker build --tag ams595/desktop:$VERSION . &&
      docker push ams595/desktop &&
      touch success)'
-  # Test startup scripts
-  - './ams595_desktop.py -d -n -t lite && docker stop $(docker ps -q) &&
-     ./ams595_jupyter.py -d -n -t lite && docker stop $(docker ps -q)'
   - docker images
