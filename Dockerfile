@@ -19,14 +19,19 @@ RUN add-apt-repository ppa:webupd8team/atom && \
         ddd \
         valgrind \
         electric-fence \
+        kcachegrind \
         ccache \
         libnss3 \
+        nano \
+        emacs \
+        vim-gtk3 \
         \
         liblapack-dev \
         libopenblas-dev \
         \
         meld \
         atom \
+        clang \
         clang-format && \
     apt-get clean && \
     pip3 install -U \
@@ -91,6 +96,7 @@ RUN echo "@start_matlab" >> $DOCKER_HOME/.config/lxsession/LXDE/autostart && \
         python-autopep8 \
         clang-format && \
     rm -rf /tmp/* && \
+    sed -i '/octave/ d' $DOCKER_HOME/.config/lxsession/LXDE/autostart && \
     echo "PATH=$DOCKER_HOME/bin:/usr/local/gdutil/bin:$PATH" >> $DOCKER_HOME/.profile
 
 
