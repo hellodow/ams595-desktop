@@ -28,6 +28,7 @@ RUN add-apt-repository ppa:webupd8team/atom && \
         \
         liblapack-dev \
         libopenblas-dev \
+        libomp-dev \
         \
         meld \
         atom \
