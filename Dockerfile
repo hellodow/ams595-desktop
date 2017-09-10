@@ -45,7 +45,6 @@ RUN add-apt-repository ppa:webupd8team/atom && \
         flake8 \
         PyQt5 \
         spyder && \
-    ln -s -f /usr/local/bin/spyder3 /usr/local/bin/spyder && \
     echo "move_to_config atom" >> /usr/local/bin/init_vnc && \
     echo "move_to_config matlab/R2016b" >> /usr/local/bin/init_vnc && \
     echo "move_to_config matlab/R2017a" >> /usr/local/bin/init_vnc && \
