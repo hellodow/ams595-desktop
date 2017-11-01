@@ -96,7 +96,6 @@ RUN echo "@start_matlab" >> $DOCKER_HOME/.config/lxsession/LXDE/autostart && \
         python-autopep8 \
         clang-format && \
     rm -rf /tmp/* && \
-    sed -i '/octave/ d' $DOCKER_HOME/.config/lxsession/LXDE/autostart && \
     echo "PATH=$DOCKER_HOME/bin:/usr/local/gdutil/bin:$PATH" >> $DOCKER_HOME/.profile
 
 
