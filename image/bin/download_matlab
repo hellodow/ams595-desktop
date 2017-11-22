@@ -42,6 +42,8 @@ then
           sudo tar zxf - -C /usr/local --delay-directory-restore \
           --warning=no-unknown-keyword --strip-components 2
 
+        sudo rm -f  /usr/local/MATLAB/$MATLAB_ROOT/sys/os/glnxa64/libstdc++.so.6
+        sudo mkdir -p $MATLAB_ROOT/licenses
         sudo chown $USER:$USER $MATLAB_ROOT/licenses
         sudo touch $MATLAB_ROOT/installed
         echo "Finished installing MATLAB."
