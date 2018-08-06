@@ -1,26 +1,21 @@
 os: linux
-dist: trusty
+sudo: required
 language: python
 services: docker
 
 env:
   global:
-    - BASE=compdatasci/octave-desktop:latest
-    - VERSION=17F
+    - VERSION=18F
 
 before_script:
-  - docker --version
-  - docker login -u "$DOCKER_USERNAME" -p "$DOCKER_USERPASS"
-  - docker pull $BASE
+  - sudo echo '{"experimental":true}' | sudo tee /etc/docker/daemon.json
+  - sudo service docker restart
+  - git clone --depth=1 https://$GIT_TOKEN@github.com/xmjiao/ci-util.git 2> /dev/null
 
 script:
-  # Build only if the commit range of a push contains Dockerfile or .travis.yml
-  - '[[ "$TRAVIS_EVENT_TYPE" == "push" && -n "$TRAVIS_COMMIT_RANGE" &&
-        -n $(git log --since $(docker inspect $BASE | grep Created | perl -e "s/.+\"([\d-:T]+).+$/\$1/g" -p)) &&
-        -z "$(git diff --name-only $TRAVIS_COMMIT_RANGE |
-            grep -e Dockerfile -e .travis.yml -e image -e WELCOME)" ]] ||
-    (docker build --tag ams595/desktop:$VERSION
-                  --tag ams595/desktop:latest . &&
-     docker push ams595/desktop &&
-     touch success)'
-  - docker images
+  - './ci-util/build-docker.sh : :$VERSION,$TRAVIS_BRANCH,latest --squash &&
+     ./ams595_desktop.py -t $TRAVIS_BRANCH -d -n -V && docker stop $(docker ps -q) &&
+     ./ams595_jupyter.py -t $TRAVIS_BRANCH -d -n -V && docker stop $(docker ps -q)'
+
+after_success:
+  - ./ci-util/trigger-via-api.sh

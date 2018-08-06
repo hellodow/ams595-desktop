@@ -1,10 +1,10 @@
-# Builds a Docker image with Ubuntu 16.04, Octave, Python3 and Jupyter Notebook
+# Builds a Docker image with Ubuntu 18.04, Octave, Python3 and Jupyter Notebook
 # for "AMS 595: Fundamental of Computing" at Stony Brook University
 #
 # Authors:
 # Xiangmin Jiao <xmjiao@gmail.com>
 
-FROM compdatasci/octave-desktop:latest
+FROM compdatasci/octave-desktop:18.04
 LABEL maintainer "Xiangmin Jiao <xmjiao@gmail.com>"
 
 USER root
