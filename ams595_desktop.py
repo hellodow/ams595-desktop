@@ -15,8 +15,8 @@ import subprocess
 import time
 import os
 
-owner = os.path.basename(sys.argv[0]).split('_')[0]
-proj = os.path.basename(sys.argv[0]).split('_')[0]
+owner = "ams595"
+proj = "ams595"
 image = owner + '/' + "desktop"
 tag = ""
 projdir = "project"
