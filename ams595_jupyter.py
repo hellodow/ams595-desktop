@@ -15,9 +15,9 @@ import subprocess
 import time
 import os
 
-owner = "compdatasci"
-proj = os.path.basename(sys.argv[0]).split('_')[0]
-image = owner + '/' + proj + "-desktop"
+owner = os.path.basename(sys.argv[0]).split('_')[0]
+proj = own
+image = owner + '/' + "desktop"
 tag = ""
 projdir = "project"
 workdir = "shared"
