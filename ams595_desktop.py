@@ -15,7 +15,7 @@ import subprocess
 import time
 import os
 
-owner = "ams595"
+owner = os.path.basename(sys.argv[0]).split('_')[0]
 proj = os.path.basename(sys.argv[0]).split('_')[0]
 image = owner + '/' + "desktop"
 tag = ""
@@ -46,7 +46,7 @@ def parse_args(description):
     parser.add_argument('-v', '--volume',
                         help='A data volume to be mounted at ~/" + projdir + ". ' +
                         'The default is ' + proj + '_project.',
-                        default=proj + "_project")
+                        default=volume)
 
     parser.add_argument('-w', '--workdir',
                         help='The starting work directory in container. ' +
