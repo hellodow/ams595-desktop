@@ -1,8 +1,8 @@
 # Docker Image for AMS 595
-This Docker image provides the Ubuntu 16.04 environment with X Windows for the class
+This Docker image provides the Ubuntu 18.04 environment with X Windows for the class
 "AMS 595: Fundamental of Computing" at Stony Brook University.
-The course covers programming using MATLAB/Octave, Python, and C++. This image runs the lightweight LXDE Windows Manager, and has Octave 4.0.2, Python 3.5.2 (with NumPy, SciPy, Pandas and Spyder),
-gcc 5.4.0, Jupyter Notebook with Octave and Python kernels, Atom, and ddd preinstalled. The X Windows will display in your web browser in full-screen mode. You can use this Docker image on 64-bit Linux, Mac or Windows. It allows you to use the same programming environment regardless which OS you are running on your laptop or desktop.
+The course covers programming using MATLAB/Octave, Python, and C++. This image runs the lightweight LXDE Windows Manager, and has Octave 4.2.1, Python 3.6.5 (with NumPy, SciPy, Pandas and Spyder),
+gcc 7.3.0, Jupyter Notebook with Octave and Python kernels, Visual Studio Code, ddd and various editors preinstalled. The X Windows will display in your web browser in full-screen mode. You can use this Docker image on 64-bit Linux, Mac or Windows. It allows you to use the same programming environment regardless which OS you are running on your laptop or desktop.
 
 ![screenshot](https://raw.github.com/compdatasci/ams595-desktop/master/screenshots/screenshot1.png)
 
@@ -62,12 +62,6 @@ After downloading the script, you can start the Docker image using the command
 python ams595_desktop.py -p
 ```
 This will download and run the Docker image and then launch your default web browser to show the desktop environment. The `-p` option is optional, and it instructs the Python script to pull and update the image to the latest version.
-
-You can start the Docker image with `MATLAB` using the command
-```
-python ams595_desktop.py -p -m
-```
-where the `-m` option would request installation of MATLAB. It will prompt you to authenticate using your Google account to download MATLAB. After the download completes, MATLAB will start automatically inside the desktop, and you may be asked to activate MATLAB using your MathWorks account. The authentication and activation need to be done only once.
 
 For additional command-line options, use the command
 ```
