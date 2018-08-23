@@ -175,7 +175,7 @@ def find_free_port(port, retries):
 def handle_interrupt(container):
     """Handle keyboard interrupt"""
     try:
-        print("Press Ctrl-C again to stop the server: ")
+        print("Press Ctrl-C again to terminate the server: ")
         time.sleep(5)
         print('Invalid response. Resuming...')
     except KeyboardInterrupt:
@@ -414,10 +414,10 @@ if __name__ == "__main__":
 
             if args.detach:
                 print('Started container ' + container + ' in background.')
-                print('To stop it, use "docker stop ' + container + '".')
+                print('To terminate it, use "docker stop ' + container + '".')
                 sys.exit(0)
 
-            print("Press Ctrl-C to stop the server.")
+            print("Press Ctrl-C to terminate the server.")
             time.sleep(1)
 
             # Wait until the container exits or Ctlr-C is pressed
