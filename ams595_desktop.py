@@ -20,7 +20,7 @@ proj = os.path.basename(sys.argv[0]).split('_')[0]
 image = owner + '/' + "desktop"
 tag = ""
 projdir = "project"
-workdir = "project"
+workdir = "shared"
 volume = proj + "_project"
 config = proj + '_' + tag + '_config'
 

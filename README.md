@@ -1,7 +1,7 @@
 # Docker Image for AMS 595
 This Docker image provides the Ubuntu 18.04 environment with X Windows for the class
-"AMS 595: Fundamental of Computing" at Stony Brook University.
-The course covers programming using MATLAB/Octave, Python, and C++. This image runs the lightweight LXDE Windows Manager, and has Octave 4.2.1, Python 3.6.5 (with NumPy, SciPy, Pandas and Spyder),
+"AMS 595: Fundamentals of Computing" at Stony Brook University.
+The course covers programming using MATLAB/Octave, Python, and C++. This image runs the lightweight LXDE Windows Manager, and has Octave 4.2.2, Python 3.6.5 (with NumPy, SciPy, Pandas and Spyder),
 gcc 7.3.0, Jupyter Notebook with Octave and Python kernels, Visual Studio Code, ddd and various editors preinstalled. The X Windows will display in your web browser in full-screen mode. You can use this Docker image on 64-bit Linux, Mac or Windows. It allows you to use the same programming environment regardless which OS you are running on your laptop or desktop.
 
 ![screenshot](https://raw.github.com/compdatasci/ams595-desktop/master/screenshots/screenshot1.png)
